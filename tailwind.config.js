@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      KOTRAHOPE: ["KOTRAHOPE"],
+    },
   },
   darkMode: "class",
   plugins: [

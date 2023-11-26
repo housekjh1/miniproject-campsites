@@ -1,0 +1,95 @@
+import { Box, Modal } from "@mui/material";
+import { useEffect, useState } from "react";
+import { TEAnimation } from "tw-elements-react";
+
+const Login = () => {
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('jwt');
+    if (isAuthenticated) {
+      window.location.href = '/';
+    }
+  }, [])
+
+  const [user, setUser] = useState({
+    username: '',
+    password: ''
+  });
+
+  const [open, setOpen] = useState(false);
+
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  }
+
+  const login = async () => {
+    await fetch(process.env.REACT_APP_SERVER_URL + 'login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user)
+    })
+      .then(resp => {
+        const jwtToken = resp.headers.get('Authorization');
+        if (jwtToken !== null) {
+          localStorage.setItem("jwt", jwtToken);
+          localStorage.setItem('name', user['username']);
+          window.location.href = '/';
+        } else {
+          setOpen(true);
+        }
+      })
+      .catch(e => console.log(e));
+  }
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+  }
+
+  const handleOnKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      login();
+    }
+  };
+
+  return (
+    <div className="font-KOTRAHOPE">
+      <div className="bg-white rounded p-5 mt-10 text-center shadow-[0px_0px_40px_-10px_rgba(0,0,0,0.3)] h-[43.5rem] sm:h-[45.5rem] md:h-[45.5rem] flex justify-center items-start">
+        <div className="border-dashed rounded border-2 border-slate-500 p-10 mt-5 md:w-[20rem]">
+          <div className="flex flex-col gap-4">
+            <p className="text-4xl font-bold text-slate-500 mb-5">Login</p>
+            <input className="border-slate-300 rounded md:w-[15rem]" type="text" name="username" placeholder="아이디를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+            <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <button className="basis-2/5 p-2 px-1 text-lg w-[5rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded mt-5" onClick={login}>Login</button>
+              <p className="basis-2/5 text-slate-500 hover:text-blue-500 text-lg mt-[1.25rem] font-bold">회원가입</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Modal open={open} onClose={closeModal} className="font-KOTRAHOPE">
+        <Box sx={style} className="rounded-lg w-auto">
+          <TEAnimation
+            animation="[shake_0.5s]"
+            start="onLoad"
+          >
+            <div className="flex flex-col justify-center items-center gap-4">
+              <p className="text-2xl">아이디 또는 비밀번호를 확인해 주세요.</p>
+            </div>
+          </TEAnimation>
+        </Box>
+      </Modal>
+    </div>
+  )
+}
+
+export default Login
