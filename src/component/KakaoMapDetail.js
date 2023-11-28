@@ -32,11 +32,13 @@ const KakaoMapDetail = ({ data }) => {
 
                 let map = new window.kakao.maps.Map(mapContainer, mapOption);
 
+                let mapTypeControl = new window.kakao.maps.MapTypeControl();
+                map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
+
                 const positions = data.map(item => ({
-                    content: `<div className="rounded"><div>사진</div><div className="text-center">${item.campName}</div></div>`,
+                    content: `<div><div>${item.campName}</div><div>&nbsp;</div></div>`,
                     latlng: new window.kakao.maps.LatLng(item.lat, item.lng)
                 }));
-
 
                 for (let i = 0; i < positions.length; i++) {
                     let marker = new window.kakao.maps.Marker({
@@ -48,14 +50,16 @@ const KakaoMapDetail = ({ data }) => {
                         content: positions[i].content
                     });
 
+                    let infowindowClick = new window.kakao.maps.InfoWindow({
+                        content: `<div><div>${positions[i].content}</div><button>자세히 알아보기</button></div>`,
+                        removable: true
+                    });
+
                     new window.kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
                     new window.kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
 
                     // 마커에 클릭이벤트를 등록합니다
-                    new window.kakao.maps.event.addListener(marker, 'click', function () {
-                        // 마커 위에 인포윈도우를 표시합니다
-                        infowindowClick.open(map, marker);
-                    });
+                    new window.kakao.maps.event.addListener(marker, 'click', makeClickListener(map, marker, infowindowClick));
                 }
 
                 function makeOverListener(map, marker, infowindow) {
@@ -70,14 +74,12 @@ const KakaoMapDetail = ({ data }) => {
                     };
                 }
 
-                let iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-                    iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-                // 인포윈도우를 생성합니다
-                let infowindowClick = new window.kakao.maps.InfoWindow({
-                    content: iwContent,
-                    removable: iwRemoveable
-                });
+                function makeClickListener(map, marker, infowindowClick) {
+                    return function () {
+                        // 클릭 시 인포윈도우 열 때 내용을 동적으로 설정
+                        infowindowClick.open(map, marker);
+                    };
+                }
             });
         };
 
@@ -87,7 +89,7 @@ const KakaoMapDetail = ({ data }) => {
             document.head.removeChild(mapScript);
         };
 
-    }, []);
+    }, [data]);
 
     return (
         <div>

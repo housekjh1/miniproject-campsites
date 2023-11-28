@@ -25,6 +25,11 @@ const Login = () => {
   }
 
   const login = async () => {
+    if (user.username.trim() === '' || user.password.trim() === '') {
+      setOpen(true);
+      id.current.focus();
+      return;
+    }
     await fetch(process.env.REACT_APP_SERVER_URL + 'login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -38,6 +43,7 @@ const Login = () => {
           window.location.href = '/';
         } else {
           setOpen(true);
+          id.current.focus();
         }
       })
       .catch(e => console.log(e));

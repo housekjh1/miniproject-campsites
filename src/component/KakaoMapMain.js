@@ -14,7 +14,10 @@ const KakaoMapMain = () => {
                     center: new window.kakao.maps.LatLng(36.300000, 127.800000), // 지도의 중심좌표
                     level: 12, // 지도의 확대 레벨
                 };
-                new window.kakao.maps.Map(mapContainer, mapOption);
+                let map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+                let mapTypeControl = new window.kakao.maps.MapTypeControl();
+                map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
             });
         };
         mapScript.addEventListener('load', onLoadKakaoMap);
