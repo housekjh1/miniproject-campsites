@@ -26,7 +26,7 @@ const Test1 = ({ data }) => {
           </form>
         </div>
         <div>
-          <KakaoMapDetail data={data} />
+          <KakaoMapDetail data={data} area={area} />
         </div>
       </div>
     </div>

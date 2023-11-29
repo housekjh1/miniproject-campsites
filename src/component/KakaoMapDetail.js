@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const KakaoMapDetail = ({ data }) => {
+const KakaoMapDetail = ({ data, area }) => {
     useEffect(() => {
         const mapScript = document.createElement('script');
         mapScript.async = true;
@@ -37,7 +37,8 @@ const KakaoMapDetail = ({ data }) => {
 
                 const positions = data.map(item => ({
                     content: `<div><div>${item.campName}</div><div>&nbsp;</div></div>`,
-                    latlng: new window.kakao.maps.LatLng(item.lat, item.lng)
+                    latlng: new window.kakao.maps.LatLng(item.lat, item.lng),
+                    camp: item.campName
                 }));
 
                 for (let i = 0; i < positions.length; i++) {
@@ -51,7 +52,7 @@ const KakaoMapDetail = ({ data }) => {
                     });
 
                     let infowindowClick = new window.kakao.maps.InfoWindow({
-                        content: `<div><div>${positions[i].content}</div><button>자세히 알아보기</button></div>`,
+                        content: `<div><div>${positions[i].camp}</div><a href="/campsite/${area}/${positions[i].camp}">자세히 알아보기</a><div>&nbsp;</div></div>`,
                         removable: true
                     });
 

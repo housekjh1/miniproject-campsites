@@ -4,6 +4,7 @@ import Login from "./component/Login";
 import Home from "./component/Home";
 import Detail from "./component/Detail";
 import NotFound from "./component/NotFound";
+import Campsite from "./component/Campsite";
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<AuthCheck><Home /></AuthCheck>} />
             <Route path="/detail/:area" element={<AuthCheck><Detail /></AuthCheck>} />
+            <Route path="/campsite/:area/:camp" element={<AuthCheck><Campsite /></AuthCheck>} />
             <Route path="*" element={<AuthCheck><NotFound /></AuthCheck>} />
           </Routes>
         </div>
