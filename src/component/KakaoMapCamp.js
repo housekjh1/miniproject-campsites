@@ -183,7 +183,7 @@ const KakaoMapCamp = ({ area, camp }) => {
     return (
         <div className="flex flex-col sm:flex-row gap-5">
             <div id="map" className="mt-5 h-[32.25rem] sm:h-[39.125rem] md:h-[39.125rem] rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2"></div>
-            <div className="mt-5 rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2">
+            <div className="mt-5 rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2 overflow-auto">
                 {campinfoTag}
             </div>
         </div>
