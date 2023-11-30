@@ -42,7 +42,7 @@ const KakaoMapDetail = ({ data, area }) => {
                 map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
 
                 const positions = data.map(item => ({
-                    content: `<div><div>${item.campName}</div><div>&nbsp;</div></div>`,
+                    content: `<div>${item.campName}</div>`,
                     latlng: new window.kakao.maps.LatLng(item.lat, item.lng),
                     camp: item.campName
                 }));
@@ -53,38 +53,39 @@ const KakaoMapDetail = ({ data, area }) => {
                         position: positions[i].latlng
                     });
 
-                    let infowindow = new window.kakao.maps.InfoWindow({
-                        content: positions[i].content
+                    let content = document.createElement('div');
+                    content.innerHTML = positions[i].content;
+                    content.style.cssText = 'background-color: rgb(255 255 255); border-style: dashed; border-width: 2px; border-color: rgb(245 158 11); border-radius: 0.25rem; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; color: rgb(100 116 139); font-weight: 700;';
+
+                    let customOverlay = new window.kakao.maps.CustomOverlay({
+                        map: null,
+                        position: positions[i].latlng,
+                        content: content,
+                        yAnchor: 2.25
                     });
 
-                    let infowindowClick = new window.kakao.maps.InfoWindow({
-                        content: `<div><div>${positions[i].camp}</div><a href="/campsite/${area}/${positions[i].camp}">자세히 알아보기</a><div>&nbsp;</div></div>`,
-                        removable: true
-                    });
-
-                    new window.kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-                    new window.kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+                    new window.kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, customOverlay));
+                    new window.kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
 
                     // 마커에 클릭이벤트를 등록합니다
-                    new window.kakao.maps.event.addListener(marker, 'click', makeClickListener(map, marker, infowindowClick));
+                    new window.kakao.maps.event.addListener(marker, 'click', makeClickListener());
+
+                    function makeClickListener() {
+                        return function () {
+                            window.location.href = `/campsite/${area}/${positions[i].camp}`;
+                        };
+                    }
                 }
 
-                function makeOverListener(map, marker, infowindow) {
+                function makeOverListener(map, customOverlay) {
                     return function () {
-                        infowindow.open(map, marker);
+                        customOverlay.setMap(map);
                     };
                 }
 
-                function makeOutListener(infowindow) {
+                function makeOutListener(customOverlay) {
                     return function () {
-                        infowindow.close();
-                    };
-                }
-
-                function makeClickListener(map, marker, infowindowClick) {
-                    return function () {
-                        // 클릭 시 인포윈도우 열 때 내용을 동적으로 설정
-                        infowindowClick.open(map, marker);
+                        customOverlay.setMap(null);
                     };
                 }
             });
