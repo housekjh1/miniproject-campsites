@@ -33,7 +33,7 @@ const KakaoMapDetail = ({ data, area }) => {
 
                 const mapOption = {
                     center: new window.kakao.maps.LatLng(initLat, initLng),
-                    level: ((data.length === 1) || (subLat < 0.0015)) ? 2 : (subLat < 0.035) ? 7 : (subLat < 0.377 && subLng < 1.2) ? 10 : (subLat < 0.585 && subLng < 1.66) ? 11 : (subLat < 1.15 && subLng < 1.66) ? 12 : 13
+                    level: ((data.length === 1) || (subLat < 0.0015)) ? 2 : (subLat < 0.035) ? 7 : (subLat < 0.067) ? 8 : (subLat < 0.377 && subLng < 1.2) ? 10 : (subLat < 0.585 && subLng < 1.66) ? 11 : (subLat < 1.165 && subLng < 1.66) ? 12 : 13
                 };
 
                 let map = new window.kakao.maps.Map(mapContainer, mapOption);

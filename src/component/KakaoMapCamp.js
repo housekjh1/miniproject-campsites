@@ -155,7 +155,7 @@ const KakaoMapCamp = ({ area, camp }) => {
         console.log(campinfo);
         setCampinfoTag(
             <div className="flex flex-col gap-5">
-                <div className="mt-5 text-5xl font-bold text-slate-500">
+                <div className="px-2 mt-5 text-5xl font-bold text-slate-500">
                     {campinfo?.campName}
                 </div>
                 <div className="text-xl font-bold text-slate-500">

@@ -22,7 +22,7 @@ const Home = () => {
       <div className="bg-white rounded p-5 mt-10 text-center shadow-[0px_0px_40px_-10px_rgba(0,0,0,0.3)] h-[41.5rem] sm:h-[45.5rem] md:h-[45.5rem]">
         <div>
           <form className="flex flex-col sm:flex-row justify-center items-center gap-3">
-            <input className="border-slate-300 rounded md:w-[15rem]" ref={search} type="text" id="search" name="search" placeholder="장소를 검색하세요." />
+            <input className="font-bold border-slate-300 rounded md:w-[15rem]" ref={search} type="text" id="search" name="search" placeholder="장소를 검색하세요." />
             <button className="p-1.5 px-4 bg-yellow-500 hover:bg-yellow-700 rounded font-bold text-sm text-white" onClick={handleClick}>검색</button>
           </form>
         </div>

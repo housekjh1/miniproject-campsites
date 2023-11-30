@@ -41,7 +41,6 @@ const Detail = () => {
                 setDetailTag(<Test2 />);
             }
         }, 100);
-
         return () => clearInterval(intervalId);
     }, [data]);
 
