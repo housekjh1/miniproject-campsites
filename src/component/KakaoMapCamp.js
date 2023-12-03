@@ -162,7 +162,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                     {`~ ${campinfo?.campType} ~`}<br />
                     {`주소 : ${campinfo?.address}`}
                 </div>
-                <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col justify-center items-center gap-2">
                     <div>
                         <table className="mt-2 table-auto mx-5 text-slate-500">
                             <tbody>
@@ -206,10 +206,12 @@ const KakaoMapCamp = ({ area, camp }) => {
                         <table className="table-auto mx-5 text-slate-500">
                             <tbody>
                                 <tr className="bg-gray-50">
-                                    <th className="border px-4 py-2">개수대</th>
+                                    <th className="border px-4 py-2">기타부대시설 1</th>
+                                    <th className="border px-4 py-2">기타부대시설 2</th>
                                 </tr>
                                 <tr>
-                                    <td className="border px-4 py-2">{campinfo?.numSink}개</td>
+                                    <td className="border px-4 py-2">{campinfo?.otherFacilities1 ? campinfo?.otherFacilities1 : '-'}</td>
+                                    <td className="border px-4 py-2">{campinfo?.otherFacilities2 ? campinfo?.otherFacilities2 : '-'}</td>
                                 </tr>
                             </tbody>
                         </table>

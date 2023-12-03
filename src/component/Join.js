@@ -3,8 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { TEAnimation } from "tw-elements-react";
 
-const Login = () => {
+const Join = () => {
   const id = useRef();
+  let username = null;
+  let password = null;
+  let passwordConfirm = null;
 
   useEffect(() => {
     id.current.focus();
@@ -25,13 +28,13 @@ const Login = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
   }
 
-  const login = async () => {
+  const join = async () => {
     if (user.username.trim() === '' || user.password.trim() === '') {
       setOpen(true);
       id.current.focus();
       return;
     }
-    await fetch(process.env.REACT_APP_SERVER_URL + 'login', {
+    await fetch(process.env.REACT_APP_SERVER_URL + `join?username=${username}&password=${password}&passwordConfirm=${passwordConfirm}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user)
@@ -66,7 +69,7 @@ const Login = () => {
 
   const handleOnKeyPress = (e) => {
     if (e.key === 'Enter') {
-      login();
+      join();
     }
   };
 
@@ -76,12 +79,13 @@ const Login = () => {
         <div className="bg-white rounded p-5 mt-10 text-center shadow-[0px_0px_40px_-10px_rgba(0,0,0,0.3)] h-auto md:w-[25rem] flex justify-center items-center">
           <div className="border-dashed rounded border-2 border-slate-500 p-10 my-5 md:w-[20rem] flex justify-center items-center">
             <div className="flex flex-col gap-4">
-              <p className="text-4xl font-bold text-slate-500 mb-5">Login</p>
+              <p className="text-4xl font-bold text-slate-500 mb-5">Join</p>
               <input ref={id} className="border-slate-300 rounded md:w-[15rem]" type="text" name="username" placeholder="아이디를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
               <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+              <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호 확인을 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
               <div className="flex flex-col md:flex-row justify-between items-center">
-                <button className="basis-2/5 p-2 px-1 text-lg w-[5rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded mt-5" onClick={login}>Login</button>
-                <p className="basis-2/5 text-slate-500 hover:text-blue-500 text-lg mt-[1.25rem] font-bold"><Link to='/join'>회원가입</Link></p>
+                <button className="basis-2/5 p-2 px-1 text-lg w-[5rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded mt-5" onClick={join}>Join</button>
+                <p className="basis-2/5 text-slate-500 hover:text-blue-500 text-lg mt-[1.25rem] font-bold"><Link to='/login'>로그인 하기</Link></p>
               </div>
             </div>
           </div>
@@ -103,4 +107,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Join

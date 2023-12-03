@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Nav from "./component/Nav";
 import Login from "./component/Login";
+import Join from "./component/Join";
 import Home from "./component/Home";
 import Detail from "./component/Detail";
 import NotFound from "./component/NotFound";
@@ -22,6 +23,7 @@ function App() {
         <div>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/join" element={<Join />} />
             <Route path="/" element={<AuthCheck><Home /></AuthCheck>} />
             <Route path="/detail/:area" element={<AuthCheck><Detail /></AuthCheck>} />
             <Route path="/campsite/:area/:camp" element={<AuthCheck><Campsite /></AuthCheck>} />
