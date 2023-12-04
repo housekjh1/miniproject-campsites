@@ -70,6 +70,12 @@ const Login = () => {
     }
   };
 
+  const handleModal = (e) => {
+    if (e.key === 'Enter') {
+      closeModal();
+    }
+  }
+
   return (
     <div className="font-KOTRAHOPE">
       <div className="flex justify-center items-start">
@@ -87,14 +93,14 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <Modal open={open} onClose={closeModal} className="font-KOTRAHOPE">
+      <Modal open={open} onClose={closeModal} className="font-KOTRAHOPE" onKeyPress={handleModal}>
         <Box sx={style} className="rounded-lg w-auto">
           <TEAnimation
             animation="[shake_0.5s]"
             start="onLoad"
           >
-            <div className="flex flex-col justify-center items-center gap-4">
-              <p className="text-2xl">아이디 또는 비밀번호를 확인해 주세요.</p>
+            <div>
+              <p className="text-2xl text-center font-bold">아이디 또는 비밀번호를 확인해 주세요.</p>
             </div>
           </TEAnimation>
         </Box>

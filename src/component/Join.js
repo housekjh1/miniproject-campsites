@@ -5,9 +5,7 @@ import { TEAnimation } from "tw-elements-react";
 
 const Join = () => {
   const id = useRef();
-  let username = null;
-  let password = null;
-  let passwordConfirm = null;
+  const pass = useRef();
 
   useEffect(() => {
     id.current.focus();
@@ -19,35 +17,60 @@ const Join = () => {
 
   const [user, setUser] = useState({
     username: '',
-    password: ''
+    password: '',
+    passwordConfirm: ''
   });
 
-  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
+  const [open4, setOpen4] = useState(false);
+  const [open5, setOpen5] = useState(false);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   }
 
   const join = async () => {
-    if (user.username.trim() === '' || user.password.trim() === '') {
-      setOpen(true);
+    if (user.username.trim() === '' || user.password.trim() === '' || user.passwordConfirm.trim() === '') {
+      setOpen1(true);
       id.current.focus();
       return;
     }
-    await fetch(process.env.REACT_APP_SERVER_URL + `join?username=${username}&password=${password}&passwordConfirm=${passwordConfirm}`, {
+
+    const formData = new URLSearchParams();
+    formData.append('username', user.username);
+    formData.append('password', user.password);
+    formData.append('passwordConfirm', user.passwordConfirm);
+
+    await fetch(process.env.REACT_APP_SERVER_URL + 'join', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user)
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData,
     })
       .then(resp => {
-        const jwtToken = resp.headers.get('Authorization');
-        if (jwtToken !== null) {
-          localStorage.setItem("jwt", jwtToken);
-          localStorage.setItem('name', user['username']);
-          window.location.href = '/';
+        if (resp.ok) {
+          return resp.text();
         } else {
-          setOpen(true);
+          throw new Error(`HTTP error! Status: ${resp.status}`);
+        }
+      })
+      .then(data => {
+        if (data === "ok") {
+          setOpen2(true);
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 2000);
+        } else if (data === "passwordMatchFailure") {
+          setOpen3(true);
+          pass.current.focus();
+        } else if (data === "usernameDuplication") {
+          setOpen4(true);
           id.current.focus();
+        } else {
+          setOpen5(true);
         }
       })
       .catch(e => console.log(e));
@@ -64,7 +87,10 @@ const Join = () => {
   };
 
   const closeModal = () => {
-    setOpen(false);
+    setOpen1(false);
+    setOpen3(false);
+    setOpen4(false);
+    setOpen5(false);
   }
 
   const handleOnKeyPress = (e) => {
@@ -72,6 +98,12 @@ const Join = () => {
       join();
     }
   };
+
+  const handleModal = (e) => {
+    if (e.key === 'Enter') {
+      closeModal();
+    }
+  }
 
   return (
     <div className="font-KOTRAHOPE">
@@ -81,8 +113,8 @@ const Join = () => {
             <div className="flex flex-col gap-4 font-bold">
               <p className="text-4xl font-bold text-slate-500 mb-5">Join</p>
               <input ref={id} className="border-slate-300 rounded md:w-[15rem]" type="text" name="username" placeholder="아이디를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
-              <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
-              <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호 확인을 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+              <input ref={pass} className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+              <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="passwordConfirm" placeholder="비밀번호 확인을 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <button className="basis-2/5 p-2 px-1 text-lg w-[5rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded mt-5" onClick={join}>Join</button>
                 <p className="basis-2/5 text-slate-500 hover:text-blue-500 text-lg mt-[1.25rem] font-bold"><Link to='/login'>로그인 하기</Link></p>
@@ -91,14 +123,62 @@ const Join = () => {
           </div>
         </div>
       </div>
-      <Modal open={open} onClose={closeModal} className="font-KOTRAHOPE">
+      <Modal open={open1} onClose={closeModal} className="font-KOTRAHOPE" onKeyPress={handleModal}>
         <Box sx={style} className="rounded-lg w-auto">
           <TEAnimation
             animation="[shake_0.5s]"
             start="onLoad"
           >
-            <div className="flex flex-col justify-center items-center gap-4">
-              <p className="text-2xl">아이디 또는 비밀번호를 확인해 주세요.</p>
+            <div>
+              <p className="text-2xl text-center font-bold">아이디 또는 비밀번호를 확인해 주세요.</p>
+            </div>
+          </TEAnimation>
+        </Box>
+      </Modal>
+      <Modal open={open2} className="font-KOTRAHOPE">
+        <Box sx={style} className="rounded-lg w-auto">
+          <TEAnimation
+            animation="[browse-in_0.5s]"
+            start="onLoad"
+          >
+            <div>
+              <p className="text-2xl text-center font-bold">{user.username}님 환영합니다.<br />로그인해 주세요.</p>
+            </div>
+          </TEAnimation>
+        </Box>
+      </Modal>
+      <Modal open={open3} onClose={closeModal} className="font-KOTRAHOPE" onKeyPress={handleModal}>
+        <Box sx={style} className="rounded-lg w-auto">
+          <TEAnimation
+            animation="[shake_0.5s]"
+            start="onLoad"
+          >
+            <div>
+              <p className="text-2xl text-center font-bold">비밀번호가 일치하지 않습니다.</p>
+            </div>
+          </TEAnimation>
+        </Box>
+      </Modal>
+      <Modal open={open4} onClose={closeModal} className="font-KOTRAHOPE" onKeyPress={handleModal}>
+        <Box sx={style} className="rounded-lg w-auto">
+          <TEAnimation
+            animation="[shake_0.5s]"
+            start="onLoad"
+          >
+            <div>
+              <p className="text-2xl text-center font-bold">이미 등록된 사용자입니다.</p>
+            </div>
+          </TEAnimation>
+        </Box>
+      </Modal>
+      <Modal open={open5} onClose={closeModal} className="font-KOTRAHOPE" onKeyPress={handleModal}>
+        <Box sx={style} className="rounded-lg w-auto">
+          <TEAnimation
+            animation="[shake_0.5s]"
+            start="onLoad"
+          >
+            <div>
+              <p className="text-2xl text-center font-bold">알 수 없는 오류가 발생하였습니다.</p>
             </div>
           </TEAnimation>
         </Box>
