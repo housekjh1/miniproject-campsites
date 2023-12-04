@@ -78,7 +78,7 @@ const Join = () => {
       <div className="flex justify-center items-start">
         <div className="bg-white rounded p-5 mt-10 text-center shadow-[0px_0px_40px_-10px_rgba(0,0,0,0.3)] h-auto md:w-[25rem] flex justify-center items-center">
           <div className="border-dashed rounded border-2 border-slate-500 p-10 my-5 md:w-[20rem] flex justify-center items-center">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 font-bold">
               <p className="text-4xl font-bold text-slate-500 mb-5">Join</p>
               <input ref={id} className="border-slate-300 rounded md:w-[15rem]" type="text" name="username" placeholder="아이디를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
               <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />

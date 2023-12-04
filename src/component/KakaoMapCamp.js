@@ -162,7 +162,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                     {`~ ${campinfo?.campType} ~`}<br />
                     {`주소 : ${campinfo?.address}`}
                 </div>
-                <div className="flex flex-col justify-center items-center gap-2">
+                <div className="flex flex-col justify-center items-center gap-2 font-bold">
                     <div>
                         <table className="mt-2 table-auto mx-5 text-slate-500">
                             <tbody>
