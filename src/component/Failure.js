@@ -1,10 +1,9 @@
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom'
-import KakaoMapCamp from './KakaoMapCamp';
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import KakaoMapError from "./KakaoMapError";
 
-const Campsite = () => {
+const Failure = () => {
     const area = useParams().area;
-    const camp = useParams().camp;
     const search = useRef();
 
     useEffect(() => {
@@ -19,7 +18,7 @@ const Campsite = () => {
 
     return (
         <div className="font-KOTRAHOPE">
-            <div className="bg-white rounded p-5 mt-10 text-center shadow-[0px_0px_40px_-10px_rgba(0,0,0,0.3)] h-[41.5rem] sm:h-[45.5rem] md:h-[45.5rem] overflow-auto">
+            <div className="bg-white rounded p-5 mt-10 text-center shadow-[0px_0px_40px_-10px_rgba(0,0,0,0.3)] h-[41.5rem] sm:h-[45.5rem] md:h-[45.5rem]">
                 <div>
                     <form className="flex flex-col sm:flex-row justify-center items-center gap-3">
                         <input className="font-bold border-slate-300 rounded md:w-[15rem]" ref={search} type="text" id="search" name="search" placeholder="장소를 검색하세요." defaultValue={area && area.trim()} />
@@ -27,11 +26,11 @@ const Campsite = () => {
                     </form>
                 </div>
                 <div>
-                    <KakaoMapCamp area={area} camp={camp} />
+                    <KakaoMapError />
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Campsite
+export default Failure

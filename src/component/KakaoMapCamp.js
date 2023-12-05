@@ -1,5 +1,19 @@
 import { useEffect, useState } from "react";
 import campImg from '../static/imgs/camping-48_48.png';
+import { AiOutlineComment } from "react-icons/ai";
+import { PiHeartStraight } from "react-icons/pi";
+import { GiForestCamp } from "react-icons/gi";
+import { FaVanShuttle } from "react-icons/fa6";
+import { GiBarracksTent } from "react-icons/gi";
+import { FaCaravan } from "react-icons/fa6";
+import { FaRestroom } from "react-icons/fa";
+import { FaShower } from "react-icons/fa6";
+import { GiTap } from "react-icons/gi";
+import { FaFireExtinguisher } from "react-icons/fa6";
+import { FaBucket } from "react-icons/fa6";
+import { FaBitbucket } from "react-icons/fa6";
+import { MdOutlineSensors } from "react-icons/md";
+import { RiHome5Fill } from "react-icons/ri";
 
 const KakaoMapCamp = ({ area, camp }) => {
     const [data, sedivata] = useState();
@@ -154,70 +168,146 @@ const KakaoMapCamp = ({ area, camp }) => {
     useEffect(() => {
         console.log(campinfo);
         setCampinfoTag(
-            <div className="flex flex-col gap-5">
-                <div className="px-2 mt-5 text-5xl font-bold text-slate-500">
-                    {campinfo?.campName}
-                </div>
-                <div className="text-xl font-bold text-slate-500">
-                    {`~ ${campinfo?.campType} ~`}<br />
-                    {`주소 : ${campinfo?.address}`}
-                </div>
-                <div className="flex flex-col justify-center items-center gap-2 font-bold">
-                    <div>
-                        <table className="mt-2 table-auto mx-5 text-slate-500">
-                            <tbody>
-                                <tr className="bg-gray-50">
-                                    <th className="border px-4 py-2">일반야영장</th>
-                                    <th className="border px-4 py-2">자동차야영장</th>
-                                    <th className="border px-4 py-2">글램핑</th>
-                                    <th className="border px-4 py-2">카라반</th>
-                                    <th className="border px-4 py-2">화장실</th>
-                                    <th className="border px-4 py-2">샤워실</th>
-
-                                </tr>
-                                <tr>
-                                    <td className="border px-4 py-2">{campinfo?.numNormCamp}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numCarCamp}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numGlamping}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numCaravan}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numRestroom}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numShowerRoom}개</td>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr className="bg-gray-50">
-                                    <th className="border px-4 py-2">개수대</th>
-                                    <th className="border px-4 py-2">소화기</th>
-                                    <th className="border px-4 py-2">방화수</th>
-                                    <th className="border px-4 py-2">방화사</th>
-                                    <th className="border px-4 py-2">화재감지기</th>
-                                </tr>
-                                <tr>
-                                    <td className="border px-4 py-2">{campinfo?.numSink}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numFireExtinguisher}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numFireExtinguisherWater}개</td>
-                                    <td className="border px-4 py-2">{campinfo?.numFireman}명</td>
-                                    <td className="border px-4 py-2">{campinfo?.numFireDetector}개</td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div className="flex flex-col justify-between h-[32.25rem] sm:h-[39.125rem] md:h-[39.125rem]">
+                <div>
+                    <div className="flex flex-col gap-5">
+                        <div className="px-2 mt-5 text-5xl font-bold text-slate-500">
+                            {campinfo?.campName}
+                        </div>
+                        <div className="text-xl font-bold text-slate-500 mx-5">
+                            {`~ ${campinfo?.campType} ~`}<br />
+                            {`주소 : ${campinfo?.address}`}
+                        </div>
+                        <div className="flex flex-col justify-center items-center gap-5 text-slate-500 font-bold mx-5">
+                            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><GiForestCamp /></div>
+                                        <div className="text-xl">일반야영장</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numNormCamp}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><FaVanShuttle /></div>
+                                        <div className="text-xl">자동차야영장</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numCarCamp}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><GiBarracksTent /></div>
+                                        <div className="text-xl">글램핑</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numGlamping}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><FaCaravan /></div>
+                                        <div className="text-xl">카라반</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numCaravan}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><FaRestroom /></div>
+                                        <div className="text-xl">화장실</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numRestroom}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><FaShower /></div>
+                                        <div className="text-xl">샤워실</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numShowerRoom}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><GiTap /></div>
+                                        <div className="text-xl">개수대</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numSink}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><FaFireExtinguisher /></div>
+                                        <div className="text-xl">소화기</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numFireExtinguisher}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><FaBucket /></div>
+                                        <div className="text-xl">방화수</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numFireExtinguisherWater}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-2xl"><FaBitbucket /></div>
+                                        <div className="text-xl">방화사</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numFireSand}개
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-3xl"><MdOutlineSensors /></div>
+                                        <div className="text-xl">화재감지기</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.numFireDetector}개
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-5">
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-3xl"><RiHome5Fill /></div>
+                                        <div className="text-xl">기타부대시설 1</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.otherFacilities1 ? campinfo?.otherFacilities1 : '-'}
+                                    </div>
+                                </div>
+                                <div className="px-4 py-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] flex flex-col gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                        <div className="text-3xl"><RiHome5Fill /></div>
+                                        <div className="text-xl">기타부대시설 2</div><br />
+                                    </div>
+                                    <div className="text-center">
+                                        {campinfo?.otherFacilities2 ? campinfo?.otherFacilities2 : '-'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <table className="table-auto mx-5 text-slate-500">
-                            <tbody>
-                                <tr className="bg-gray-50">
-                                    <th className="border px-4 py-2">기타부대시설 1</th>
-                                    <th className="border px-4 py-2">기타부대시설 2</th>
-                                </tr>
-                                <tr>
-                                    <td className="border px-4 py-2">{campinfo?.otherFacilities1 ? campinfo?.otherFacilities1 : '-'}</td>
-                                    <td className="border px-4 py-2">{campinfo?.otherFacilities2 ? campinfo?.otherFacilities2 : '-'}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className="flex flex-row ml-5 mt-10 mb-5 gap-2 text-3xl text-slate-500">
+                        <PiHeartStraight />
+                        <AiOutlineComment />
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }, [campinfo]);
 

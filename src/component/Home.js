@@ -14,7 +14,7 @@ const Home = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     if (search.current.value.trim() === '') return;
-    window.location.href = `/detail/${search.current.value}`;
+    window.location.href = `/search/${search.current.value}`;
   }
 
   return (

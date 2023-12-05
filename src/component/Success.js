@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import KakaoMapDetail from "./KakaoMapDetail";
 
-const Test1 = ({ data }) => {
+const Success = ({ data }) => {
   const area = useParams().area;
   const search = useRef();
 
@@ -13,7 +13,7 @@ const Test1 = ({ data }) => {
   const handleClick = async (e) => {
     e.preventDefault();
     if (search.current.value.trim() === '') return;
-    window.location.href = `/detail/${search.current.value}`;
+    window.location.href = `/search/${search.current.value}`;
   }
 
   return (
@@ -33,4 +33,4 @@ const Test1 = ({ data }) => {
   );
 }
 
-export default Test1
+export default Success

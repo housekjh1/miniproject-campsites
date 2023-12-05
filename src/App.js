@@ -3,9 +3,9 @@ import Nav from "./component/Nav";
 import Login from "./component/Login";
 import Join from "./component/Join";
 import Home from "./component/Home";
-import Detail from "./component/Detail";
-import NotFound from "./component/NotFound";
+import Search from "./component/Search";
 import Campsite from "./component/Campsite";
+import NotFound from "./component/NotFound";
 
 function App() {
 
@@ -25,7 +25,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/join" element={<Join />} />
             <Route path="/" element={<AuthCheck><Home /></AuthCheck>} />
-            <Route path="/detail/:area" element={<AuthCheck><Detail /></AuthCheck>} />
+            <Route path="/search/:area" element={<AuthCheck><Search /></AuthCheck>} />
             <Route path="/campsite/:area/:camp" element={<AuthCheck><Campsite /></AuthCheck>} />
             <Route path="*" element={<AuthCheck><NotFound /></AuthCheck>} />
           </Routes>

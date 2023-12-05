@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Test1 from "./Test1";
-import Test2 from "./Test2";
+import Success from './Success';
+import Failure from './Failure';
 
-const Detail = () => {
+const Search = () => {
     const area = useParams().area;
     const [data, setData] = useState();
     const [detailTag, setDetailTag] = useState();
@@ -35,10 +35,10 @@ const Detail = () => {
         const intervalId = setInterval(() => {
             if (data && data.length > 0) {
                 clearInterval(intervalId);
-                setDetailTag(<Test1 data={data} />);
+                setDetailTag(<Success data={data} />);
             } else {
                 clearInterval(intervalId);
-                setDetailTag(<Test2 />);
+                setDetailTag(<Failure />);
             }
         }, 100);
         return () => clearInterval(intervalId);
@@ -51,4 +51,4 @@ const Detail = () => {
     );
 }
 
-export default Detail
+export default Search
