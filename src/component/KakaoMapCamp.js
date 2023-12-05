@@ -23,7 +23,7 @@ const KakaoMapCamp = ({ area, camp }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/detail/${area}`, {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/search/${area}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
