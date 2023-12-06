@@ -25,7 +25,7 @@ const KakaoMapCamp = ({ area, camp }) => {
     const [commentTag, setCommentTag] = useState();
     const [campinfo, setCampinfo] = useState();
     const [campinfoTag, setCampinfoTag] = useState();
-    const inputComment = useRef();
+    const inputComment = useRef('');
     const [inputValue, setInputValue] = useState('');
     const [inputResult, setInputResult] = useState();
     const [editComment, setEditComment] = useState();
@@ -370,12 +370,20 @@ const KakaoMapCamp = ({ area, camp }) => {
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
                     <div>
                         <div className="text-2xl font-bold text-slate-700">{item.writer}</div>
-                        <div className="text-lg font-bold text-slate-600">{item.content}</div>
+                        <div className="text-lg font-bold text-slate-600">
+                            {item.content.split('\n').map((line, index) => (
+                                <div key={index}>
+                                    {line}
+                                    {index !== item.content.split('\n').length - 1 && <br />}
+                                </div>
+                            ))}
+                        </div>
                         <div className="text-sm font-bold text-slate-500">{item.createDate}</div>
                     </div>
-                    {item.writer === localStorage.getItem("name") ? (
+                    {item.writer === localStorage.getItem("name") && (
                         <div className="flex flex-row gap-2">
-                            <div className="text-slate-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150"
+                            <div
+                                className="text-slate-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150"
                                 onClick={() => onEdit(item.seq)}
                             >
                                 <FaEdit />
@@ -387,8 +395,6 @@ const KakaoMapCamp = ({ area, camp }) => {
                                 <FaTrashCan />
                             </div>
                         </div>
-                    ) : (
-                        <div></div>
                     )}
                 </div>
             </div>
@@ -408,7 +414,7 @@ const KakaoMapCamp = ({ area, camp }) => {
             setCommentTag(
                 <div className="text-2xl text-center font-bold text-slate-700">
                     <p>작성된 댓글이 없습니다.<br />
-                        첫 댓글을 작성해 주세요.
+                        첫 댓글을 작성해 보세요.
                     </p>
                 </div>
             )
@@ -569,14 +575,8 @@ const KakaoMapCamp = ({ area, camp }) => {
         setInputValue(e.target.value);
     };
 
-    const handleInputBox = (e) => {
-        if (e.key === 'Enter') {
-            handleInput();
-        }
-    }
-
     const handleErrorModal = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' || e.key === ' ') {
             setOpenError(false);
         }
     }
@@ -593,6 +593,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                 <Box sx={style} className="rounded-lg w-auto">
                     <div className="flex flex-col justify-center items-center h-[35rem]">
                         <div className="text-5xl text-slate-700 text-center font-bold mb-4">Comment</div>
+                        <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
                         <div className="sm:w-[25rem] sm:h-[35rem] overflow-auto">
                             <div className="flex flex-col gap-5 my-5">
                                 <div className="flex flex-col justify-center items-center gap-5">
@@ -600,9 +601,10 @@ const KakaoMapCamp = ({ area, camp }) => {
                                 </div>
                             </div>
                         </div>
+                        <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
                         <div className="mt-4">
                             <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
-                                <input ref={inputComment} type="text" className="border-2 border-slate-400 rounded-md text-slate-700 font-bold" onKeyPress={handleInputBox} onChange={handleInputChange} placeholder="댓글을 입력해 주세요." />
+                                <textarea ref={inputComment} rows="2" className="border-2 border-slate-400 rounded-md text-slate-700 font-bold resize-none px-2 py-1" onChange={handleInputChange} placeholder="댓글을 입력해 주세요." />
                                 <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleInput}>입력</button>
                             </div>
                         </div>

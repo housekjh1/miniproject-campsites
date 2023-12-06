@@ -13,19 +13,18 @@ const KakaoMapDetail = ({ data, area }) => {
         let maxLat = 0;
         let minLng = 999;
         let maxLng = 0;
-        data.map(item => {
+        data.forEach(item => {
             initLat += item.lat;
             initLng += item.lng;
-            if (item.lat < minLat) minLat = item.lat;
-            if (item.lat > maxLat) maxLat = item.lat;
-            if (item.lng < minLng) minLng = item.lng;
-            if (item.lng > maxLng) maxLng = item.lng;
+            minLat = Math.min(minLat, item.lat);
+            maxLat = Math.max(maxLat, item.lat);
+            minLng = Math.min(minLng, item.lng);
+            maxLng = Math.max(maxLng, item.lng);
         });
         initLat /= data.length;
         initLng /= data.length;
         const subLat = maxLat - minLat;
         const subLng = maxLng - minLng;
-        console.log(subLat, subLng);
 
         const onLoadKakaoMap = () => {
             window.kakao.maps.load(() => {
@@ -97,7 +96,7 @@ const KakaoMapDetail = ({ data, area }) => {
             document.head.removeChild(mapScript);
         };
 
-    }, [data]);
+    }, []);
 
     return (
         <div>

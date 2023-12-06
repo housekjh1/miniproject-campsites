@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import KakaoMapMain from "./KakaoMapMain";
 
 const Home = () => {
-
   const search = useRef();
-  const [data, setData] = useState();
 
   useEffect(() => {
     search.current.focus();

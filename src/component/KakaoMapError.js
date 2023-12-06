@@ -1,4 +1,4 @@
-import { Box, Modal, Typography } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 import { useEffect, useState } from 'react'
 import { TEAnimation } from 'tw-elements-react';
 
