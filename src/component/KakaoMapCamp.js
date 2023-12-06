@@ -15,6 +15,9 @@ import { FaBitbucket } from "react-icons/fa6";
 import { MdOutlineSensors } from "react-icons/md";
 import { RiHome5Fill } from "react-icons/ri";
 import { Box, Modal } from "@mui/material";
+import { TEAnimation } from "tw-elements-react";
+import { FaEdit } from "react-icons/fa";
+import { FaTrashCan } from "react-icons/fa6";
 
 const KakaoMapCamp = ({ area, camp }) => {
     const [data, setData] = useState();
@@ -23,6 +26,12 @@ const KakaoMapCamp = ({ area, camp }) => {
     const [campinfo, setCampinfo] = useState();
     const [campinfoTag, setCampinfoTag] = useState();
     const inputComment = useRef();
+    const [inputValue, setInputValue] = useState('');
+    const [inputResult, setInputResult] = useState();
+    const [editComment, setEditComment] = useState();
+    const [editResult, setEditResult] = useState();
+    const [removeSeq, setRemoveSeq] = useState();
+    const [removeResult, setRemoveResult] = useState();
 
     useEffect(() => {
         async function fetchData() {
@@ -314,6 +323,9 @@ const KakaoMapCamp = ({ area, camp }) => {
     }, [campinfo]);
 
     const [open, setOpen] = useState(false);
+    const [openError, setOpenError] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [openRemove, setOpenRemove] = useState(false);
 
     const style = {
         position: 'absolute',
@@ -352,16 +364,43 @@ const KakaoMapCamp = ({ area, camp }) => {
         setOpen(true);
     }
 
+    const CommentItem = ({ item, onEdit, onRemove }) => {
+        return (
+            <div className="px-4 py-2 mx-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] sm:w-[20rem]">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <div>
+                        <div className="text-2xl font-bold text-slate-700">{item.writer}</div>
+                        <div className="text-lg font-bold text-slate-600">{item.content}</div>
+                        <div className="text-sm font-bold text-slate-500">{item.createDate}</div>
+                    </div>
+                    {item.writer === localStorage.getItem("name") ? (
+                        <div className="flex flex-row gap-2">
+                            <div className="text-slate-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150"
+                                onClick={() => onEdit(item.seq)}
+                            >
+                                <FaEdit />
+                            </div>
+                            <div
+                                className="text-slate-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150"
+                                onClick={() => onRemove(item.seq)}
+                            >
+                                <FaTrashCan />
+                            </div>
+                        </div>
+                    ) : (
+                        <div></div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
     useEffect(() => {
         if (comment && comment.length > 0) {
             setCommentTag(
                 comment.map(item => {
                     return (
-                        <div key={item.seq} className="px-4 py-2 mx-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] sm:w-[20rem]">
-                            <div className="text-2xl font-bold text-slate-700">{item.writer}</div>
-                            <div className="text-lg font-bold text-slate-600">{item.content}</div>
-                            <div className="text-sm font-bold text-slate-500">{item.createDate}</div>
-                        </div>
+                        <CommentItem key={item.seq} item={item} onEdit={handleEdit} onRemove={handleRemove} />
                     )
                 })
             )
@@ -369,30 +408,176 @@ const KakaoMapCamp = ({ area, camp }) => {
             setCommentTag(
                 <div className="text-2xl text-center font-bold text-slate-700">
                     <p>작성된 댓글이 없습니다.<br />
-                        댓글을 작성해 주세요.
+                        첫 댓글을 작성해 주세요.
                     </p>
                 </div>
             )
         }
     }, [comment])
 
+    const handleEdit = (seq) => {
+        let tmp = comment.filter(item => item.seq === seq)[0];
+        console.log(tmp);
+        setEditComment(tmp);
+        setOpenEdit(true);
+    }
+
+    const handleRemove = (seq) => {
+        setRemoveSeq(seq);
+        setOpenRemove(true);
+    }
+
+    const handleRemoveButton = () => {
+        removeFunc();
+        closeRemoveModal();
+    }
+
+    const removeFunc = () => {
+        const formData = new URLSearchParams();
+        formData.append('seq', removeSeq);
+        async function fetchCommentRemove() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/comment/remove`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': localStorage.getItem("jwt")
+                    },
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const datas = await response.text();
+                setRemoveResult(datas);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchCommentRemove();
+    }
+
+    useEffect(() => {
+        if (removeResult === "ok") {
+            let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
+            const formData = new URLSearchParams();
+            formData.append('campsiteName', tmp.campName);
+            async function fetchComment() {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/comment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': localStorage.getItem("jwt")
+                        },
+                        body: formData,
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const datas = await response.json();
+                    setComment(datas);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            fetchComment();
+            setRemoveSeq();
+            setRemoveResult();
+        }
+    }, [removeResult])
+
+    const handleInput = () => {
+        if (inputComment.current.value.trim() === '' || inputValue.trim() === '') {
+            inputComment.current.value = '';
+            setInputValue('');
+            inputComment.current.focus();
+            setOpenError(true);
+            return;
+        }
+        let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
+        const formData = new URLSearchParams();
+        formData.append('campsiteName', tmp.campName);
+        formData.append('writer', localStorage.getItem("name"));
+        formData.append('content', inputValue);
+        async function fetchCommentInput() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/comment/input`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': localStorage.getItem("jwt")
+                    },
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const datas = await response.text();
+                setInputResult(datas);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchCommentInput();
+    }
+
+    useEffect(() => {
+        if (inputResult === "ok") {
+            inputComment.current.value = '';
+            setInputValue('');
+            let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
+            const formData = new URLSearchParams();
+            formData.append('campsiteName', tmp.campName);
+            async function fetchComment() {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/comment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': localStorage.getItem("jwt")
+                        },
+                        body: formData,
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const datas = await response.json();
+                    setComment(datas);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            fetchComment();
+            setInputResult();
+        }
+    }, [inputResult])
+
     const closeModal = () => {
         setOpen(false);
     }
 
-    const handleModal = (e) => {
-        // if (e.key === 'Enter') {
-        //     closeModal();
-        // }
+    const closeEditModal = () => {
+        setOpenEdit(false);
     }
 
-    const handleInput = () => {
-        console.log(inputComment.current.value);
+    const closeRemoveModal = () => {
+        setOpenRemove(false);
     }
+
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+    };
 
     const handleInputBox = (e) => {
         if (e.key === 'Enter') {
             handleInput();
+        }
+    }
+
+    const handleErrorModal = (e) => {
+        if (e.key === 'Enter') {
+            setOpenError(false);
         }
     }
 
@@ -404,7 +589,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                     {campinfoTag}
                 </div>
             </div>
-            <Modal open={open} onClose={closeModal} className="font-KOTRAHOPE" onKeyPress={handleModal}>
+            <Modal open={open} onClose={closeModal} className="font-KOTRAHOPE">
                 <Box sx={style} className="rounded-lg w-auto">
                     <div className="flex flex-col justify-center items-center h-[35rem]">
                         <div className="text-5xl text-slate-700 text-center font-bold mb-4">Comment</div>
@@ -416,11 +601,57 @@ const KakaoMapCamp = ({ area, camp }) => {
                             </div>
                         </div>
                         <div className="mt-4">
-                            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 font-bold">
-                                <input ref={inputComment} type="text" className="border-2 border-slate-400 rounded-md text-slate-700" onKeyPress={handleInputBox} placeholder="댓글을 입력해 주세요." />
+                            <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
+                                <input ref={inputComment} type="text" className="border-2 border-slate-400 rounded-md text-slate-700 font-bold" onKeyPress={handleInputBox} onChange={handleInputChange} placeholder="댓글을 입력해 주세요." />
                                 <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleInput}>입력</button>
                             </div>
                         </div>
+                    </div>
+                </Box>
+            </Modal>
+            <Modal
+                open={openError}
+                onClose={() => setOpenError(false)}
+                className="font-KOTRAHOPE"
+                onKeyPress={handleErrorModal}
+            >
+                <Box sx={style} className="rounded-lg w-auto">
+                    <TEAnimation
+                        animation="[shake_0.5s]"
+                        start="onLoad"
+                    >
+                        <div>
+                            <p className="text-2xl text-center font-bold text-slate-700">댓글을 입력해 주세요.</p>
+                        </div>
+                    </TEAnimation>
+                </Box>
+            </Modal>
+            <Modal
+                open={openEdit}
+                onClose={closeEditModal}
+                className="font-KOTRAHOPE"
+            >
+                <Box sx={style} className="rounded-lg w-auto">
+                    <div>
+                        <p className="text-4xl text-center font-bold text-slate-700">Edit</p>
+                        <div className="flex flex-col gap-2 mt-2">
+                            <div className="text-xl font-bold text-slate-700">username</div>
+                            <input ref={inputComment} type="text" className="border-2 border-slate-400 rounded-md text-slate-700" placeholder="댓글을 입력해 주세요." />
+                            <div>작성날짜</div>
+                            <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded">수정</button>
+                        </div>
+                    </div>
+                </Box>
+            </Modal>
+            <Modal
+                open={openRemove}
+                onClose={closeRemoveModal}
+                className="font-KOTRAHOPE"
+            >
+                <Box sx={style} className="rounded-lg w-auto">
+                    <div className="flex flex-col justify-center items-center gap-4">
+                        <p className="text-2xl text-center font-bold text-slate-700">댓글을 삭제하시겠습니까?</p>
+                        <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleRemoveButton}>삭제</button>
                     </div>
                 </Box>
             </Modal>
