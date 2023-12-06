@@ -47,7 +47,7 @@ const Nav = () => {
                     <Modal open={isModalOpen} onClose={closeModal} className="font-KOTRAHOPE">
                         <Box sx={style} className="rounded-lg w-auto">
                             <div className="flex flex-col justify-center items-center gap-4">
-                                <p className="text-2xl">로그아웃 하시겠습니까?</p>
+                                <p className="text-2xl text-center font-bold text-slate-700">로그아웃 하시겠습니까?</p>
                                 <button className="p-1 px-1 w-[5rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={logout}>로그아웃</button>
                             </div>
                         </Box>

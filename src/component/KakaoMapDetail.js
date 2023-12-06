@@ -55,7 +55,7 @@ const KakaoMapDetail = ({ data, area }) => {
 
                     let content = document.createElement('div');
                     content.innerHTML = positions[i].content;
-                    content.style.cssText = 'background-color: rgb(255 255 255); border-style: dashed; border-width: 2px; border-color: rgb(245 158 11); border-radius: 0.25rem; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; color: rgb(100 116 139); font-weight: 700;';
+                    content.style.cssText = 'background-color: rgb(255 255 255); border-style: dashed; border-width: 2px; border-color: rgb(245 158 11); border-radius: 0.25rem; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; color: rgb(71 85 105); font-weight: 700;';
 
                     let customOverlay = new window.kakao.maps.CustomOverlay({
                         map: null,

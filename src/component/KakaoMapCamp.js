@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import campImg from '../static/imgs/camping-48_48.png';
 import { AiOutlineComment } from "react-icons/ai";
 import { PiHeartStraight } from "react-icons/pi";
@@ -14,11 +14,15 @@ import { FaBucket } from "react-icons/fa6";
 import { FaBitbucket } from "react-icons/fa6";
 import { MdOutlineSensors } from "react-icons/md";
 import { RiHome5Fill } from "react-icons/ri";
+import { Box, Modal } from "@mui/material";
 
 const KakaoMapCamp = ({ area, camp }) => {
-    const [data, sedivata] = useState();
+    const [data, setData] = useState();
+    const [comment, setComment] = useState();
+    const [commentTag, setCommentTag] = useState();
     const [campinfo, setCampinfo] = useState();
     const [campinfoTag, setCampinfoTag] = useState();
+    const inputComment = useRef();
 
     useEffect(() => {
         async function fetchData() {
@@ -34,7 +38,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                     throw new Error('Network response was not ok');
                 }
                 const datas = await response.json();
-                sedivata(datas);
+                setData(datas);
             } catch (error) {
                 console.error(error);
             }
@@ -50,7 +54,6 @@ const KakaoMapCamp = ({ area, camp }) => {
         mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_API_KEY}&autoload=false`;
         document.head.appendChild(mapScript);
 
-        console.log(data);
         let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
         setCampinfo(tmp);
         let campLat = tmp.lat;
@@ -92,7 +95,7 @@ const KakaoMapCamp = ({ area, camp }) => {
 
                         let content = document.createElement('div');
                         content.innerHTML = positions[i].content;
-                        content.style.cssText = 'background-color: rgb(255 255 255); border-style: dashed; border-width: 2px; border-color: rgb(245 158 11); border-radius: 0.25rem; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; color: rgb(100 116 139); font-weight: 700;';
+                        content.style.cssText = 'background-color: rgb(255 255 255); border-style: dashed; border-width: 2px; border-color: rgb(245 158 11); border-radius: 0.25rem; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; color: rgb(71 85 105); font-weight: 700;';
 
                         let customOverlay = new window.kakao.maps.CustomOverlay({
                             map: null,
@@ -120,7 +123,7 @@ const KakaoMapCamp = ({ area, camp }) => {
 
                         let content = document.createElement('div');
                         content.innerHTML = positions[i].content;
-                        content.style.cssText = 'background-color: rgb(255 255 255); border-style: dashed; border-width: 2px; border-color: rgb(245 158 11); border-radius: 0.25rem; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; color: rgb(100 116 139); font-weight: 700;';
+                        content.style.cssText = 'background-color: rgb(255 255 255); border-style: dashed; border-width: 2px; border-color: rgb(245 158 11); border-radius: 0.25rem; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; color: rgb(71 85 105); font-weight: 700;';
 
                         let customOverlay = new window.kakao.maps.CustomOverlay({
                             map: null,
@@ -166,7 +169,6 @@ const KakaoMapCamp = ({ area, camp }) => {
     }, [data]);
 
     useEffect(() => {
-        console.log(campinfo);
         setCampinfoTag(
             <div className="flex flex-col justify-between h-[32.25rem] sm:h-[39.125rem] md:h-[39.125rem]">
                 <div>
@@ -304,19 +306,124 @@ const KakaoMapCamp = ({ area, camp }) => {
                     </div>
                     <div className="flex flex-row ml-5 mt-10 mb-5 gap-2 text-3xl text-slate-500">
                         <PiHeartStraight />
-                        <AiOutlineComment />
+                        <AiOutlineComment onClick={handleComment} className="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-150" />
                     </div>
                 </div>
             </div >
         );
     }, [campinfo]);
 
+    const [open, setOpen] = useState(false);
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 2,
+    };
+
+    const handleComment = () => {
+        let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
+        const formData = new URLSearchParams();
+        formData.append('campsiteName', tmp.campName);
+        async function fetchComment() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/comment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': localStorage.getItem("jwt")
+                    },
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const datas = await response.json();
+                setComment(datas);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchComment();
+        setOpen(true);
+    }
+
+    useEffect(() => {
+        if (comment && comment.length > 0) {
+            setCommentTag(
+                comment.map(item => {
+                    return (
+                        <div key={item.seq} className="px-4 py-2 mx-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] sm:w-[20rem]">
+                            <div className="text-2xl font-bold text-slate-700">{item.writer}</div>
+                            <div className="text-lg font-bold text-slate-600">{item.content}</div>
+                            <div className="text-sm font-bold text-slate-500">{item.createDate}</div>
+                        </div>
+                    )
+                })
+            )
+        } else {
+            setCommentTag(
+                <div className="text-2xl text-center font-bold text-slate-700">
+                    <p>작성된 댓글이 없습니다.<br />
+                        댓글을 작성해 주세요.
+                    </p>
+                </div>
+            )
+        }
+    }, [comment])
+
+    const closeModal = () => {
+        setOpen(false);
+    }
+
+    const handleModal = (e) => {
+        // if (e.key === 'Enter') {
+        //     closeModal();
+        // }
+    }
+
+    const handleInput = () => {
+        console.log(inputComment.current.value);
+    }
+
+    const handleInputBox = (e) => {
+        if (e.key === 'Enter') {
+            handleInput();
+        }
+    }
+
     return (
-        <div className="flex flex-col sm:flex-row gap-5">
-            <div id="map" className="mt-5 h-[32.25rem] sm:h-[39.125rem] md:h-[39.125rem] rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2"></div>
-            <div className="mt-5 rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2 overflow-auto">
-                {campinfoTag}
+        <div>
+            <div className="flex flex-col sm:flex-row gap-5">
+                <div id="map" className="mt-5 h-[32.25rem] sm:h-[39.125rem] md:h-[39.125rem] rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2"></div>
+                <div className="mt-5 rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2 overflow-auto">
+                    {campinfoTag}
+                </div>
             </div>
+            <Modal open={open} onClose={closeModal} className="font-KOTRAHOPE" onKeyPress={handleModal}>
+                <Box sx={style} className="rounded-lg w-auto">
+                    <div className="flex flex-col justify-center items-center h-[35rem]">
+                        <div className="text-5xl text-slate-700 text-center font-bold mb-4">Comment</div>
+                        <div className="sm:w-[25rem] sm:h-[35rem] overflow-auto">
+                            <div className="flex flex-col gap-5 my-5">
+                                <div className="flex flex-col justify-center items-center gap-5">
+                                    {commentTag}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-4">
+                            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 font-bold">
+                                <input ref={inputComment} type="text" className="border-2 border-slate-400 rounded-md text-slate-700" onKeyPress={handleInputBox} placeholder="댓글을 입력해 주세요." />
+                                <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleInput}>입력</button>
+                            </div>
+                        </div>
+                    </div>
+                </Box>
+            </Modal>
         </div>
     );
 };

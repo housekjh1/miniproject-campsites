@@ -60,7 +60,7 @@ const KakaoMapError = () => {
                         start="onLoad"
                     >
                         <div className="flex flex-col justify-center items-center gap-4">
-                            <p className="text-2xl">검색결과가 없습니다.</p>
+                            <p className="text-2xl text-center font-bold text-slate-700">검색결과가 없습니다.</p>
                         </div>
                     </TEAnimation>
                 </Box>

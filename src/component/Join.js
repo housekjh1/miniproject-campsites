@@ -112,9 +112,9 @@ const Join = () => {
           <div className="border-dashed rounded border-2 border-slate-500 p-10 my-5 md:w-[20rem] flex justify-center items-center">
             <div className="flex flex-col gap-4 font-bold">
               <p className="text-4xl font-bold text-slate-500 mb-5">Join</p>
-              <input ref={id} className="border-slate-300 rounded md:w-[15rem]" type="text" name="username" placeholder="아이디를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
-              <input ref={pass} className="border-slate-300 rounded md:w-[15rem]" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
-              <input className="border-slate-300 rounded md:w-[15rem]" type="password" name="passwordConfirm" placeholder="비밀번호 확인을 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+              <input ref={id} className="border-slate-300 rounded md:w-[15rem] text-slate-700" type="text" name="username" placeholder="아이디를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+              <input ref={pass} className="border-slate-300 rounded md:w-[15rem] text-slate-700" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
+              <input className="border-slate-300 rounded md:w-[15rem] text-slate-700" type="password" name="passwordConfirm" placeholder="비밀번호 확인을 입력하세요." onChange={handleChange} onKeyPress={handleOnKeyPress} />
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <button className="basis-2/5 p-2 px-1 text-lg w-[5rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded mt-5" onClick={join}>Join</button>
                 <p className="basis-2/5 text-slate-500 hover:text-blue-500 text-lg mt-[1.25rem] font-bold"><Link to='/login'>로그인 하기</Link></p>
@@ -130,7 +130,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold">아이디 또는 비밀번호를 확인해 주세요.</p>
+              <p className="text-2xl text-center font-bold text-slate-700">아이디 또는 비밀번호를 확인해 주세요.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -142,7 +142,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold">{user.username}님 환영합니다.<br />로그인해 주세요.</p>
+              <p className="text-2xl text-center font-bold text-slate-700">{user.username}님 환영합니다.<br />로그인해 주세요.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -154,7 +154,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold">비밀번호가 일치하지 않습니다.</p>
+              <p className="text-2xl text-center font-bold text-slate-700">비밀번호가 일치하지 않습니다.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -166,7 +166,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold">이미 등록된 사용자입니다.</p>
+              <p className="text-2xl text-center font-bold text-slate-700">이미 등록된 사용자입니다.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -178,7 +178,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold">알 수 없는 오류가 발생하였습니다.</p>
+              <p className="text-2xl text-center font-bold text-slate-700">알 수 없는 오류가 발생하였습니다.</p>
             </div>
           </TEAnimation>
         </Box>
