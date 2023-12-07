@@ -16,6 +16,7 @@ const Nav = () => {
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -29,6 +30,10 @@ const Nav = () => {
         localStorage.removeItem("jwt");
         localStorage.removeItem("name");
         window.location.href = '/login';
+    }
+
+    const openLoginModal = () => {
+        setLoginOpen(true);
     }
 
     if (localStorage.getItem("jwt")) {
@@ -57,12 +62,20 @@ const Nav = () => {
         )
     } else {
         return (
-            <div className="flex flex-col sm:flex-row sm:justify-between items-center font-KOTRAHOPE">
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-2 font-bold ">
-                    <GiCampingTent className="text-2xl mt-1 text-yellow-500 hover:text-yellow-700" />
-                    <div className="text-2xl text-slate-500 hover:text-blue-500">전국 야영장 등록 현황</div>
+            <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-2 font-KOTRAHOPE">
+                <Link to="/">
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-2 font-bold ">
+                        <GiCampingTent className="text-2xl mt-1 text-yellow-500 hover:text-yellow-700" />
+                        <div className="text-2xl text-slate-500 hover:text-blue-500">전국 야영장 등록 현황</div>
+                    </div>
+                </Link>
+                <div>
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-2" onClick={openLoginModal}>
+                        <Link to="/login"><button className="text-xl font-bold text-slate-500 hover:text-blue-500">Login</button></Link>
+                        <div className="text-xl font-bold text-slate-500">/</div>
+                        <Link to="/join"><button className="text-xl font-bold text-slate-500 hover:text-blue-500">Join</button></Link>
+                    </div>
                 </div>
-                <div></div>
             </div>
         )
     }

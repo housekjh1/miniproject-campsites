@@ -662,7 +662,7 @@ const KakaoMapCamp = ({ area, camp }) => {
     return (
         <div>
             <div className="flex flex-col sm:flex-row gap-5">
-                <div id="map" className="mt-5 h-[32.25rem] sm:h-[39.125rem] md:h-[39.125rem] rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2"></div>
+                <div id="map" className="mt-5 h-[27.375rem] sm:h-[39.125rem] md:h-[39.125rem] rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2"></div>
                 <div className="mt-5 rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)] w-full sm:basis-1/2 overflow-auto">
                     {campinfoTag}
                 </div>
@@ -681,9 +681,19 @@ const KakaoMapCamp = ({ area, camp }) => {
                         </div>
                         <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
                         <div className="mt-4">
-                            <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
-                                <textarea ref={inputComment} rows="2" className="border-2 border-slate-400 rounded-md text-slate-700 font-bold resize-none px-2 py-1" onChange={handleInputChange} placeholder="댓글을 입력해 주세요." />
-                                <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleInput}>입력</button>
+                            <div>
+                                {
+                                    localStorage.getItem("jwt") ?
+                                        <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
+                                            <textarea ref={inputComment} rows="2" className="border-2 border-slate-400 rounded-md text-slate-700 font-bold resize-none px-2 py-1" onChange={handleInputChange} placeholder="댓글을 입력해 주세요." />
+                                            <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleInput}>입력</button>
+                                        </div>
+                                        :
+                                        <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
+                                            <textarea rows="2" className="border-2 border-slate-400 rounded-md text-slate-700 font-bold resize-none px-2 py-1" placeholder="댓글을 작성하시려면 로그인을 하세요." readOnly />
+                                            <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded">입력</button>
+                                        </div>
+                                }
                             </div>
                         </div>
                     </div>

@@ -100,7 +100,7 @@ const KakaoMapDetail = ({ data, area }) => {
 
     return (
         <div>
-            <div id="map" className="mt-5 h-[32.25rem] sm:h-[39.125rem] md:h-[39.125rem] rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)]"></div>
+            <div id="map" className="mt-5 h-[27.375rem] sm:h-[39.125rem] md:h-[39.125rem] rounded shadow-[0px_0px_10px_0px_rgba(0,0,0,0.3)]"></div>
         </div>
     );
 };

@@ -9,10 +9,10 @@ import NotFound from "./component/NotFound";
 
 function App() {
 
-  const AuthCheck = ({ children }) => {
-    const isAuthenticated = localStorage.getItem('jwt');
-    return isAuthenticated ? children : <Navigate to="/login" />;
-  };
+  // const AuthCheck = ({ children }) => {
+  //   const isAuthenticated = localStorage.getItem('jwt');
+  //   return isAuthenticated ? children : <Navigate to="/login" />;
+  // };
 
   return (
     <main className='container mx-auto'>
@@ -24,10 +24,10 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/join" element={<Join />} />
-            <Route path="/" element={<AuthCheck><Home /></AuthCheck>} />
-            <Route path="/search/:area" element={<AuthCheck><Search /></AuthCheck>} />
-            <Route path="/campsite/:area/:camp" element={<AuthCheck><Campsite /></AuthCheck>} />
-            <Route path="*" element={<AuthCheck><NotFound /></AuthCheck>} />
+            <Route path="/" element={<Home />} />
+            <Route path="/search/:area" element={<Search />} />
+            <Route path="/campsite/:area/:camp" element={<Campsite />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </BrowserRouter>
