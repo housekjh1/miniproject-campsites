@@ -28,7 +28,9 @@ const KakaoMapCamp = ({ area, camp }) => {
     const inputComment = useRef('');
     const [inputValue, setInputValue] = useState('');
     const [inputResult, setInputResult] = useState();
+    const editCommentRef = useRef();
     const [editComment, setEditComment] = useState();
+    const [editCommentTag, setEditCommentTag] = useState();
     const [editResult, setEditResult] = useState();
     const [removeSeq, setRemoveSeq] = useState();
     const [removeResult, setRemoveResult] = useState();
@@ -423,10 +425,27 @@ const KakaoMapCamp = ({ area, camp }) => {
 
     const handleEdit = (seq) => {
         let tmp = comment.filter(item => item.seq === seq)[0];
-        console.log(tmp);
         setEditComment(tmp);
         setOpenEdit(true);
     }
+
+    useEffect(() => {
+        console.log(editComment);
+        // if (!editComment) {
+        //     editCommentRef.current.value = editComment.content;
+        //     setEditCommentTag(
+        //         <div className="px-2.5 py-2">
+        //             <p className="text-4xl text-center font-bold text-slate-700">Edit</p>
+        //             <div className="flex flex-col gap-4 mt-2">
+        //                 <div className="text-xl font-bold text-slate-700">{localStorage.getItem("name")}</div>
+        //                 <textarea ref={editCommentRef} rows="4" className="border-2 border-slate-400 rounded-md text-slate-600 font-bold resize-none px-2 py-1" placeholder="댓글을 입력해 주세요." />
+        //                 <div className="text-sm text-slate-500 font-bold">작성날짜</div>
+        //                 <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded">수정</button>
+        //             </div>
+        //         </div>
+        //     );
+        // }
+    }, [editComment])
 
     const handleRemove = (seq) => {
         setRemoveSeq(seq);
@@ -494,8 +513,7 @@ const KakaoMapCamp = ({ area, camp }) => {
     }, [removeResult])
 
     const handleInput = () => {
-        if (inputComment.current.value.trim() === '' || inputValue.trim() === '') {
-            inputComment.current.value = '';
+        if (inputValue.trim() === '') {
             setInputValue('');
             inputComment.current.focus();
             setOpenError(true);
@@ -530,7 +548,6 @@ const KakaoMapCamp = ({ area, camp }) => {
 
     useEffect(() => {
         if (inputResult === "ok") {
-            inputComment.current.value = '';
             setInputValue('');
             let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
             const formData = new URLSearchParams();
@@ -556,6 +573,7 @@ const KakaoMapCamp = ({ area, camp }) => {
             }
             fetchComment();
             setInputResult();
+            inputComment.current.value = '';
         }
     }, [inputResult])
 
@@ -623,7 +641,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                         start="onLoad"
                     >
                         <div>
-                            <p className="text-2xl text-center font-bold text-slate-700">댓글을 입력해 주세요.</p>
+                            <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-2">댓글을 입력해 주세요.</p>
                         </div>
                     </TEAnimation>
                 </Box>
@@ -635,13 +653,7 @@ const KakaoMapCamp = ({ area, camp }) => {
             >
                 <Box sx={style} className="rounded-lg w-auto">
                     <div>
-                        <p className="text-4xl text-center font-bold text-slate-700">Edit</p>
-                        <div className="flex flex-col gap-2 mt-2">
-                            <div className="text-xl font-bold text-slate-700">username</div>
-                            <input ref={inputComment} type="text" className="border-2 border-slate-400 rounded-md text-slate-700" placeholder="댓글을 입력해 주세요." />
-                            <div>작성날짜</div>
-                            <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded">수정</button>
-                        </div>
+                        {editCommentTag}
                     </div>
                 </Box>
             </Modal>
@@ -651,7 +663,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                 className="font-KOTRAHOPE"
             >
                 <Box sx={style} className="rounded-lg w-auto">
-                    <div className="flex flex-col justify-center items-center gap-4">
+                    <div className="flex flex-col justify-center items-center gap-4 p-2.5">
                         <p className="text-2xl text-center font-bold text-slate-700">댓글을 삭제하시겠습니까?</p>
                         <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleRemoveButton}>삭제</button>
                     </div>
