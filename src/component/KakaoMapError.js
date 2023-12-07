@@ -30,7 +30,6 @@ const KakaoMapError = () => {
         }, 1000);
 
         return () => clearTimeout(timer);
-
     }, []);
 
     const style = {
@@ -40,7 +39,7 @@ const KakaoMapError = () => {
         transform: 'translate(-50%, -50%)',
         bgcolor: 'background.paper',
         boxShadow: 24,
-        p: 4,
+        p: 2,
     };
 
     return (
@@ -59,8 +58,8 @@ const KakaoMapError = () => {
                         animation="[shake_0.5s]"
                         start="onLoad"
                     >
-                        <div className="flex flex-col justify-center items-center gap-4">
-                            <p className="text-2xl text-center font-bold text-slate-700">검색결과가 없습니다.</p>
+                        <div>
+                            <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">검색결과가 없습니다.</p>
                         </div>
                     </TEAnimation>
                 </Box>

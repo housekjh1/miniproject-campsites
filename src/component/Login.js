@@ -57,7 +57,7 @@ const Login = () => {
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
-    p: 4,
+    p: 2,
   };
 
   const closeModal = () => {
@@ -100,7 +100,7 @@ const Login = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold text-slate-700">아이디 또는 비밀번호를 확인해 주세요.</p>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">아이디 또는 비밀번호를 확인해 주세요.</p>
             </div>
           </TEAnimation>
         </Box>

@@ -12,7 +12,7 @@ const Nav = () => {
         transform: 'translate(-50%, -50%)',
         bgcolor: 'background.paper',
         boxShadow: 24,
-        p: 4,
+        p: 2,
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +46,7 @@ const Nav = () => {
                     </div>
                     <Modal open={isModalOpen} onClose={closeModal} className="font-KOTRAHOPE">
                         <Box sx={style} className="rounded-lg w-auto">
-                            <div className="flex flex-col justify-center items-center gap-4">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
                                 <p className="text-2xl text-center font-bold text-slate-700">로그아웃 하시겠습니까?</p>
                                 <button className="p-1 px-1 w-[5rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={logout}>로그아웃</button>
                             </div>

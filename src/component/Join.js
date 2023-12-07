@@ -83,7 +83,7 @@ const Join = () => {
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     boxShadow: 24,
-    p: 4,
+    p: 2,
   };
 
   const closeModal = () => {
@@ -130,7 +130,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold text-slate-700">아이디 또는 비밀번호를 확인해 주세요.</p>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">아이디 또는 비밀번호를 확인해 주세요.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -142,7 +142,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold text-slate-700">{user.username}님 환영합니다.<br />로그인해 주세요.</p>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">{user.username}님 환영합니다.<br />로그인해 주세요.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -154,7 +154,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold text-slate-700">비밀번호가 일치하지 않습니다.</p>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">비밀번호가 일치하지 않습니다.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -166,7 +166,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold text-slate-700">이미 등록된 사용자입니다.</p>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">이미 등록된 사용자입니다.</p>
             </div>
           </TEAnimation>
         </Box>
@@ -178,7 +178,7 @@ const Join = () => {
             start="onLoad"
           >
             <div>
-              <p className="text-2xl text-center font-bold text-slate-700">알 수 없는 오류가 발생하였습니다.</p>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">알 수 없는 오류가 발생하였습니다.</p>
             </div>
           </TEAnimation>
         </Box>

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import campImg from '../static/imgs/camping-48_48.png';
 import { AiOutlineComment } from "react-icons/ai";
-import { PiHeartStraight } from "react-icons/pi";
 import { GiForestCamp } from "react-icons/gi";
 import { FaVanShuttle } from "react-icons/fa6";
 import { GiBarracksTent } from "react-icons/gi";
@@ -28,8 +27,6 @@ const KakaoMapCamp = ({ area, camp }) => {
     const inputComment = useRef('');
     const [inputValue, setInputValue] = useState('');
     const [inputResult, setInputResult] = useState();
-    const editCommentRef = useRef();
-    const [editComment, setEditComment] = useState();
     const [editCommentTag, setEditCommentTag] = useState();
     const [editResult, setEditResult] = useState();
     const [removeSeq, setRemoveSeq] = useState();
@@ -316,7 +313,6 @@ const KakaoMapCamp = ({ area, camp }) => {
                         </div>
                     </div>
                     <div className="flex flex-row ml-5 mt-10 mb-5 gap-2 text-3xl text-slate-500">
-                        <PiHeartStraight />
                         <AiOutlineComment onClick={handleComment} className="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-150" />
                     </div>
                 </div>
@@ -371,7 +367,10 @@ const KakaoMapCamp = ({ area, camp }) => {
             <div className="px-4 py-2 mx-2 rounded shadow-[0px_0px_10px_-2px_rgba(0,0,0,0.3)] sm:w-[20rem]">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
                     <div>
-                        <div className="text-2xl font-bold text-slate-700">{item.writer}</div>
+                        <div className="flex flex-row justify-start items-center">
+                            <div className="text-2xl font-bold text-slate-700">{item.writer}</div>
+                            {item.edited && <p className="text-lg font-bold text-slate-700">&nbsp;(수정됨)</p>}
+                        </div>
                         <div className="text-lg font-bold text-slate-600">
                             {item.content.split('\n').map((line, index) => (
                                 <div key={index}>
@@ -423,29 +422,96 @@ const KakaoMapCamp = ({ area, camp }) => {
         }
     }, [comment])
 
+    const editRef = useRef();
+
     const handleEdit = (seq) => {
         let tmp = comment.filter(item => item.seq === seq)[0];
-        setEditComment(tmp);
+        const handleEditButtonClick = () => {
+            handleEditButton(tmp);
+        };
+        setEditCommentTag(
+            <div className="flex flex-col gap-4 px-5 py-2">
+                <p className="text-4xl text-center font-bold text-slate-700">Edit</p>
+                <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
+                <div className="flex flex-col gap-2">
+                    <div className="text-xl font-bold text-slate-700">{localStorage.getItem("name")}</div>
+                    <textarea ref={editRef} rows="4" className="border-2 border-slate-400 rounded-md text-slate-600 font-bold resize-none px-2 py-1" placeholder="댓글을 입력해 주세요." defaultValue={tmp.content} />
+                    <div className="text-sm text-slate-500 font-bold">{tmp.createDate}</div>
+                </div>
+                <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
+                <div className="flex justify-center items-center">
+                    <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleEditButtonClick}>수정</button>
+                </div>
+            </div>
+        );
         setOpenEdit(true);
     }
 
+    const handleEditButton = (tmp) => {
+        let value = editRef.current.value;
+        if (value.trim() === '') {
+            setOpenError(true);
+            editRef.current.focus();
+            return;
+        }
+        editFunc(tmp, value);
+        closeEditModal();
+    }
+
+    const editFunc = (tmp, value) => {
+        const formData = new URLSearchParams();
+        formData.append('seq', tmp.seq);
+        formData.append('content', value);
+        async function fetchCommentEdit() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/comment/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': localStorage.getItem("jwt")
+                    },
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const datas = await response.text();
+                setEditResult(datas);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchCommentEdit();
+    }
+
     useEffect(() => {
-        console.log(editComment);
-        // if (!editComment) {
-        //     editCommentRef.current.value = editComment.content;
-        //     setEditCommentTag(
-        //         <div className="px-2.5 py-2">
-        //             <p className="text-4xl text-center font-bold text-slate-700">Edit</p>
-        //             <div className="flex flex-col gap-4 mt-2">
-        //                 <div className="text-xl font-bold text-slate-700">{localStorage.getItem("name")}</div>
-        //                 <textarea ref={editCommentRef} rows="4" className="border-2 border-slate-400 rounded-md text-slate-600 font-bold resize-none px-2 py-1" placeholder="댓글을 입력해 주세요." />
-        //                 <div className="text-sm text-slate-500 font-bold">작성날짜</div>
-        //                 <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded">수정</button>
-        //             </div>
-        //         </div>
-        //     );
-        // }
-    }, [editComment])
+        if (editResult === "ok") {
+            let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
+            const formData = new URLSearchParams();
+            formData.append('campsiteName', tmp.campName);
+            async function fetchComment() {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}api/comment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': localStorage.getItem("jwt")
+                        },
+                        body: formData,
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const datas = await response.json();
+                    setComment(datas);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            fetchComment();
+            setEditResult();
+        }
+    }, [editResult])
 
     const handleRemove = (seq) => {
         setRemoveSeq(seq);
@@ -591,12 +657,6 @@ const KakaoMapCamp = ({ area, camp }) => {
 
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
-    };
-
-    const handleErrorModal = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            setOpenError(false);
-        }
     }
 
     return (
@@ -633,7 +693,6 @@ const KakaoMapCamp = ({ area, camp }) => {
                 open={openError}
                 onClose={() => setOpenError(false)}
                 className="font-KOTRAHOPE"
-                onKeyPress={handleErrorModal}
             >
                 <Box sx={style} className="rounded-lg w-auto">
                     <TEAnimation
