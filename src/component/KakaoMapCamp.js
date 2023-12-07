@@ -710,7 +710,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                         start="onLoad"
                     >
                         <div>
-                            <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-2">댓글을 입력해 주세요.</p>
+                            <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">댓글을 입력해 주세요.</p>
                         </div>
                     </TEAnimation>
                 </Box>
@@ -732,7 +732,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                 className="font-KOTRAHOPE"
             >
                 <Box sx={style} className="rounded-lg w-auto">
-                    <div className="flex flex-col justify-center items-center gap-4 p-2.5">
+                    <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
                         <p className="text-2xl text-center font-bold text-slate-700">댓글을 삭제하시겠습니까?</p>
                         <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleRemoveButton}>삭제</button>
                     </div>

@@ -22,7 +22,7 @@ const Success = ({ data }) => {
         <div>
           <form className="flex flex-col sm:flex-row justify-center items-center gap-3">
             <input className="font-bold border-slate-300 rounded md:w-[15rem] text-slate-700" ref={search} type="text" id="search" name="search" placeholder="장소를 검색하세요." defaultValue={area && area.trim()} />
-            <button className="p-1.5 px-4 bg-yellow-500 hover:bg-yellow-700 rounded font-bold text-sm text-white" onClick={handleClick}>검색</button>
+            <button className="p-1 px-1 w-[3rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded" onClick={handleClick}>검색</button>
           </form>
         </div>
         <div>
