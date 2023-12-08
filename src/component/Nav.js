@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { GiCampingTent } from "react-icons/gi";
 
 const Nav = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [unRegisterOpen, setUnRegisterOpen] = useState(false);
 
     const style = {
         position: 'absolute',
@@ -14,9 +17,6 @@ const Nav = () => {
         boxShadow: 24,
         p: 2,
     };
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loginOpen, setLoginOpen] = useState(false);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -29,11 +29,23 @@ const Nav = () => {
     const logout = () => {
         localStorage.removeItem("jwt");
         localStorage.removeItem("name");
-        window.location.href = '/login';
+        window.location.href = '/';
     }
 
     const openLoginModal = () => {
         setLoginOpen(true);
+    }
+
+    const handleUnRegister = () => {
+        setUnRegisterOpen(true);
+    }
+
+    const closeUnRegister = () => {
+        setUnRegisterOpen(false);
+    }
+
+    const doUnRegister = () => {
+        console.log("탈퇴 실행");
     }
 
     if (localStorage.getItem("jwt")) {
@@ -54,6 +66,26 @@ const Nav = () => {
                             <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
                                 <p className="text-2xl text-center font-bold text-slate-700">로그아웃 하시겠습니까?</p>
                                 <button className="p-1.5 px-1 w-[4.375rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded text-lg" onClick={logout}>로그아웃</button>
+                                {
+                                    localStorage.getItem("name") !== "admin" &&
+                                    <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
+                                }
+                                {
+                                    localStorage.getItem("name") !== "admin" &&
+                                    <button className="text-[1.125rem] text-center font-bold text-red-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150" onClick={handleUnRegister}>회원탈퇴</button>
+                                }
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={unRegisterOpen}
+                        onClose={closeUnRegister}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <p className="text-2xl text-center font-bold text-slate-700">회원 정보를 삭제하시겠습니까?</p>
+                                <button className="text-xl text-center font-bold text-red-700 hover:animate-shake" onClick={doUnRegister}>삭제</button>
                             </div>
                         </Box>
                     </Modal>
