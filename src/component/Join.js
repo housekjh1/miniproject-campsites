@@ -9,10 +9,10 @@ const Join = () => {
 
   useEffect(() => {
     id.current.focus();
-    const isAuthenticated = localStorage.getItem('jwt');
-    if (isAuthenticated) {
-      window.location.href = '/';
-    }
+    // const isAuthenticated = localStorage.getItem('jwt');
+    // if (isAuthenticated) {
+    //   window.location.href = '/';
+    // }
   }, [])
 
   const [user, setUser] = useState({

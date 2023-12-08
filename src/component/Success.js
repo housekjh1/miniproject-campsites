@@ -1,10 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import KakaoMapDetail from "./KakaoMapDetail";
+import { Box, Modal } from "@mui/material";
+import { TEAnimation } from "tw-elements-react";
 
 const Success = ({ data }) => {
   const area = useParams().area;
   const search = useRef();
+  const [openBlank, setOpenBlank] = useState(false);
+  const [openSC, setOpenSC] = useState(false);
 
   useEffect(() => {
     search.current.focus();
@@ -12,8 +16,50 @@ const Success = ({ data }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    if (search.current.value.trim() === '') return;
-    window.location.href = `/search/${search.current.value}`;
+    let keyword = search.current.value;
+    let filter = keyword.indexOf('/') !== -1 || keyword.indexOf('\\') !== -1 || keyword.indexOf('.') !== -1 || keyword.indexOf('?') !== -1 || keyword.indexOf('#') !== -1;
+    if (keyword.trim() === '') {
+      setOpenBlank(true);
+      return;
+    } else if (filter) {
+      setOpenSC(true);
+      return;
+    }
+    window.location.href = `/search/${keyword}`;
+  }
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 2,
+  };
+
+  const closeBlank = () => {
+    setOpenBlank(false);
+    search.current.value = '';
+    search.current.focus();
+  }
+
+  const closeSC = () => {
+    setOpenSC(false);
+    search.current.value = '';
+    search.current.focus();
+  }
+
+  const handleBlank = (e) => {
+    if (e.key === 'Enter') {
+      closeBlank();
+    }
+  }
+
+  const handleSC = (e) => {
+    if (e.key === 'Enter') {
+      closeSC();
+    }
   }
 
   return (
@@ -29,6 +75,30 @@ const Success = ({ data }) => {
           <KakaoMapDetail data={data} area={area} />
         </div>
       </div>
+      <Modal open={openBlank} onClose={closeBlank} className="font-KOTRAHOPE" onKeyPress={handleBlank}>
+        <Box sx={style} className="rounded-lg w-auto">
+          <TEAnimation
+            animation="[shake_0.5s]"
+            start="onLoad"
+          >
+            <div>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">장소를 입력하세요.</p>
+            </div>
+          </TEAnimation>
+        </Box>
+      </Modal>
+      <Modal open={openSC} onClose={closeSC} className="font-KOTRAHOPE" onKeyPress={handleSC}>
+        <Box sx={style} className="rounded-lg w-auto">
+          <TEAnimation
+            animation="[shake_0.5s]"
+            start="onLoad"
+          >
+            <div>
+              <p className="text-2xl text-center font-bold text-slate-700 px-2.5 py-1">특수문자를 입력하지 말아주세요.</p>
+            </div>
+          </TEAnimation>
+        </Box>
+      </Modal>
     </div>
   );
 }
