@@ -46,7 +46,8 @@ const Failure = () => {
 
     const closeSC = () => {
         setOpenSC(false);
-        search.current.value = '';
+        let keyword = search.current.value;
+        search.current.value = keyword.replaceAll('/', '').replaceAll('\\', '').replaceAll('.', '').replaceAll('?', '').replaceAll('#', '');
         search.current.focus();
     }
 
