@@ -17,6 +17,8 @@ import { Box, Modal } from "@mui/material";
 import { TEAnimation } from "tw-elements-react";
 import { FaEdit } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
+import { useRecoilValue } from "recoil";
+import { userState } from './Recoil';
 
 const KakaoMapCamp = ({ area, camp }) => {
     const [data, setData] = useState();
@@ -31,6 +33,14 @@ const KakaoMapCamp = ({ area, camp }) => {
     const [editResult, setEditResult] = useState();
     const [removeSeq, setRemoveSeq] = useState();
     const [removeResult, setRemoveResult] = useState();
+    const recoilName = useRecoilValue(userState);
+    const [username, setUsername] = useState();
+
+    useEffect(() => {
+        if (recoilName.key === "success") {
+            setUsername(recoilName.value);
+        }
+    }, [recoilName])
 
     useEffect(() => {
         async function fetchData() {
@@ -381,7 +391,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                         </div>
                         <div className="text-sm font-bold text-slate-500">{item.createDate}</div>
                     </div>
-                    {item.writer === localStorage.getItem("name") && (
+                    {item.writer === username && (
                         <div className="flex flex-row gap-2">
                             <div
                                 className="text-slate-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150"
@@ -434,7 +444,7 @@ const KakaoMapCamp = ({ area, camp }) => {
                 <p className="text-4xl text-center font-bold text-slate-700">Edit</p>
                 <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
                 <div className="flex flex-col gap-2">
-                    <div className="text-xl font-bold text-slate-700">{localStorage.getItem("name")}</div>
+                    <div className="text-xl font-bold text-slate-700">{username}</div>
                     <textarea ref={editRef} rows="4" className="border-2 border-slate-400 rounded-md text-slate-600 font-bold resize-none px-2 py-1" placeholder="댓글을 입력해 주세요." defaultValue={tmp.content} />
                     <div className="text-sm text-slate-500 font-bold">{tmp.createDate}</div>
                 </div>
@@ -588,7 +598,7 @@ const KakaoMapCamp = ({ area, camp }) => {
         let tmp = data.filter(item => item.campName.trim() === camp.trim())[0];
         const formData = new URLSearchParams();
         formData.append('campsiteName', tmp.campName);
-        formData.append('writer', localStorage.getItem("name"));
+        formData.append('writer', username);
         formData.append('content', inputValue);
         async function fetchCommentInput() {
             try {

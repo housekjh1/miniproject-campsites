@@ -5,11 +5,7 @@ module.exports = {
     "./node_modules/tw-elements-react/dist/js/**/*.js"
   ],
   theme: {
-    extend: {
-      animation: {
-        'shake': 'shake 0.75s cubic-bezier(.0, .0, .0, .0) ',
-      },
-    },
+    extend: {},
     fontFamily: {
       KOTRAHOPE: ["KOTRAHOPE"],
     },

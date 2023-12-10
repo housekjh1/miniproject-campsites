@@ -8,10 +8,10 @@ const Login = () => {
 
   useEffect(() => {
     id.current.focus();
-    // const isAuthenticated = localStorage.getItem('jwt');
-    // if (isAuthenticated) {
-    //   window.location.href = '/';
-    // }
+    const isAuthenticated = localStorage.getItem('jwt');
+    if (isAuthenticated) {
+      window.location.href = '/';
+    }
   }, [])
 
   const [user, setUser] = useState({
@@ -28,7 +28,6 @@ const Login = () => {
   const login = async () => {
     if (user.username.trim() === '' || user.password.trim() === '') {
       setOpen(true);
-      id.current.focus();
       return;
     }
     await fetch(process.env.REACT_APP_SERVER_URL + 'login', {
@@ -40,11 +39,9 @@ const Login = () => {
         const jwtToken = resp.headers.get('Authorization');
         if (jwtToken !== null) {
           localStorage.setItem("jwt", jwtToken);
-          localStorage.setItem('name', user['username']);
           window.location.href = '/';
         } else {
           setOpen(true);
-          id.current.focus();
         }
       })
       .catch(e => console.log(e));

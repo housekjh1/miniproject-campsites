@@ -31,7 +31,6 @@ const Search = () => {
     }, []);
 
     useEffect(() => {
-        console.log(data);
         const intervalId = setInterval(() => {
             if (data && data.length > 0) {
                 clearInterval(intervalId);

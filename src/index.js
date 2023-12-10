@@ -4,13 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "tw-elements-react/dist/css/tw-elements-react.min.css";
+import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-  <div className='overflow-hidden bg-gradient-to-br from-amber-50 to-amber-200 h-screen'>
-    <App />
-  </div>
+  <RecoilRoot>
+    <div className='overflow-hidden bg-gradient-to-br from-amber-50 to-amber-200 h-screen'>
+      <App />
+    </div>
+  </RecoilRoot>
   // </React.StrictMode>
 );
 

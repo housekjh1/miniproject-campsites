@@ -1,12 +1,18 @@
 import { Box, Modal } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { GiCampingTent } from "react-icons/gi";
+import { useRecoilState } from "recoil";
+import { userState } from './Recoil';
+import { TEAnimation } from "tw-elements-react";
 
 const Nav = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loginOpen, setLoginOpen] = useState(false);
     const [unRegisterOpen, setUnRegisterOpen] = useState(false);
+    const [recoilName, setRecoilName] = useRecoilState(userState);
+    const [username, setUsername] = useState();
+    const [quitResult, setQuitResult] = useState();
+    const [quitOpen, setQuitOpen] = useState(false);
 
     const style = {
         position: 'absolute',
@@ -28,12 +34,8 @@ const Nav = () => {
 
     const logout = () => {
         localStorage.removeItem("jwt");
-        localStorage.removeItem("name");
-        window.location.href = '/';
-    }
-
-    const openLoginModal = () => {
-        setLoginOpen(true);
+        const currentUrl = window.location.href;
+        window.location.href = currentUrl;
     }
 
     const handleUnRegister = () => {
@@ -44,9 +46,75 @@ const Nav = () => {
         setUnRegisterOpen(false);
     }
 
-    const doUnRegister = () => {
-        console.log("탈퇴 실행");
+    const closeQuit = () => {
+        setQuitOpen(false);
+        if (quitResult) {
+            if (quitResult.key === "success" && quitResult.value === "ok") {
+                localStorage.removeItem("jwt");
+            }
+        }
+        const currentUrl = window.location.href;
+        window.location.href = currentUrl;
     }
+
+    const doUnRegister = () => {
+        const formData = new URLSearchParams();
+        formData.append('username', username);
+        async function fetchQuit() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}quit`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const datas = await response.json();
+                setQuitResult(datas);
+                closeUnRegister();
+                closeModal();
+                setQuitOpen(true);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchQuit();
+    }
+
+    useEffect(() => {
+        if (localStorage.getItem("jwt")) {
+            const formData = new URLSearchParams();
+            formData.append('token', localStorage.getItem("jwt"));
+            async function fetchMember() {
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}member`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: formData,
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const datas = await response.json();
+                    setRecoilName(datas);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            fetchMember();
+        }
+    }, [])
+
+    useEffect(() => {
+        if (recoilName.key === "success") {
+            setUsername(recoilName.value);
+        }
+    }, [recoilName])
 
     if (localStorage.getItem("jwt")) {
         return (
@@ -59,7 +127,7 @@ const Nav = () => {
                 </Link>
                 <div>
                     <div className="flex justify-center items-center gap-2" onClick={openModal}>
-                        <button className="text-xl font-bold text-slate-500 hover:text-blue-500">{localStorage.getItem("name")}</button>
+                        <button className="text-xl font-bold text-slate-500 hover:text-blue-500">{username}</button>
                     </div>
                     <Modal open={isModalOpen} onClose={closeModal} className="font-KOTRAHOPE">
                         <Box sx={style} className="rounded-lg w-auto">
@@ -67,11 +135,11 @@ const Nav = () => {
                                 <p className="text-2xl text-center font-bold text-slate-700">로그아웃 하시겠습니까?</p>
                                 <button className="p-1.5 px-1 w-[4.375rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded text-lg" onClick={logout}>로그아웃</button>
                                 {
-                                    localStorage.getItem("name") !== "admin" &&
+                                    username !== "admin" &&
                                     <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
                                 }
                                 {
-                                    localStorage.getItem("name") !== "admin" &&
+                                    username !== "admin" &&
                                     <button className="text-[1.125rem] text-center font-bold text-red-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150" onClick={handleUnRegister}>회원탈퇴</button>
                                 }
                             </div>
@@ -85,7 +153,29 @@ const Nav = () => {
                         <Box sx={style} className="rounded-lg w-auto">
                             <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
                                 <p className="text-2xl text-center font-bold text-slate-700">회원 정보를 삭제하시겠습니까?</p>
-                                <button className="text-xl text-center font-bold text-red-700 hover:animate-shake" onClick={doUnRegister}>삭제</button>
+                                <TEAnimation
+                                    animation="[jiggle_0.5s]"
+                                    start="onHover"
+                                    reset
+                                >
+                                    <button className="text-xl text-center font-bold text-red-700" onClick={doUnRegister}>삭제</button>
+                                </TEAnimation>
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={quitOpen}
+                        onClose={closeQuit}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <TEAnimation
+                                    animation="[browse-in_0.5s]"
+                                    start="onLoad"
+                                >
+                                    <p className="text-2xl text-center font-bold text-slate-700">회원정보를 삭제하였습니다.</p>
+                                </TEAnimation>
                             </div>
                         </Box>
                     </Modal>
@@ -102,7 +192,7 @@ const Nav = () => {
                     </div>
                 </Link>
                 <div>
-                    <div className="flex flex-col sm:flex-row justify-center items-center gap-2" onClick={openLoginModal}>
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
                         <Link to="/login"><button className="text-xl font-bold text-slate-500 hover:text-blue-500">Login</button></Link>
                         <div className="text-xl font-bold text-slate-500">/</div>
                         <Link to="/join"><button className="text-xl font-bold text-slate-500 hover:text-blue-500">Join</button></Link>
