@@ -8,6 +8,10 @@
 - Back-End : Spring
 - DB : MySQL
 
+### 프로젝트 예시
+
+- [예시 동영상](https://youtu.be/BbT278g_SN0)
+
 ### 프로젝트 진행관련 문서
 
 - [전국 야영장 등록 현황](https://www.notion.so/nationalcampsites/d01ab95636f44275b1d78fade054ddd0?v=32cc7e8cf00a47bab19d9cceb40c6fb4)
