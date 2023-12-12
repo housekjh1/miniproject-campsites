@@ -15,4 +15,3 @@
 ### 프로젝트 진행관련 문서
 
 - [전국 야영장 등록 현황](https://www.notion.so/nationalcampsites/d01ab95636f44275b1d78fade054ddd0?v=32cc7e8cf00a47bab19d9cceb40c6fb4)
-- [깃허브 배포](https://enne.tistory.com/10)
