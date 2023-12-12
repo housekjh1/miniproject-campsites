@@ -13,6 +13,7 @@ const Nav = () => {
     const [username, setUsername] = useState();
     const [quitResult, setQuitResult] = useState();
     const [quitOpen, setQuitOpen] = useState(false);
+    const [changeData, setChangeData] = useState();
 
     const style = {
         position: 'absolute',
@@ -110,11 +111,111 @@ const Nav = () => {
         }
     }, [])
 
+    const [tokenError, setTokenError] = useState(false);
+    const [memberError, setMemberError] = useState(false);
+    const [passwordChange, setPasswordChange] = useState(false);
+    const [user, setUser] = useState({
+        password: '',
+        passwordConfirm: ''
+    });
+    const [change1, setChange1] = useState(false);
+    const [change2, setChange2] = useState(false);
+    const [changeError, setChangeError] = useState(false);
+
+    const closeTokenError = () => {
+        localStorage.removeItem("jwt");
+        setTokenError(false);
+        window.location.href = "/login";
+    }
+
+    const closeMemberError = () => {
+        localStorage.removeItem("jwt");
+        setMemberError(false);
+        window.location.href = "/login";
+    }
+
+    const trigChange = () => {
+        setPasswordChange(true);
+    }
+
+    const closePasswordChange = () => {
+        user.password = '';
+        user.passwordConfirm = '';
+        setPasswordChange(false);
+    }
+
+    const handleChange = (e) => {
+        setUser({ ...user, [e.target.name]: e.target.value });
+    }
+
+    const closeChange1 = () => {
+        setChange1(false);
+        closePasswordChange();
+    }
+
+    const closeChange2 = () => {
+        setChange2(false);
+    }
+
+    const doChange = () => {
+        if (user.password.trim() === '' || user.passwordConfirm.trim() === '') {
+            user.password = '';
+            user.passwordConfirm = '';
+            setChangeError(true);
+            return;
+        }
+        const formData = new URLSearchParams();
+        formData.append('username', username);
+        formData.append('password', user.password);
+        formData.append('passwordConfirm', user.passwordConfirm);
+        async function fetchChange() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}change`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const datas = await response.json();
+                setChangeData(datas);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchChange();
+    }
+
     useEffect(() => {
         if (recoilName.key === "success") {
             setUsername(recoilName.value);
+        } else if (recoilName.key === "error" && recoilName.value === "invalidToken") {
+            setTokenError(true);
+        } else if (recoilName.key === "error" && recoilName.value === "decodingError") {
+            setTokenError(true);
+        } else if (recoilName.key === "error" && recoilName.value === "invalidMember") {
+            setMemberError(true);
         }
     }, [recoilName])
+
+    useEffect(() => {
+        if (changeData) {
+            if (changeData.key === "success" && changeData.value === "ok") {
+                user.password = '';
+                user.passwordConfirm = '';
+                setChange1(true);
+            } else if (changeData.key === "error" && changeData.value === "invalidMember") {
+                user.password = '';
+                user.passwordConfirm = '';
+                setMemberError(true);
+            } else if (changeData.key === "error" && changeData.value === "passwordMatchFailure") {
+                setChange2(true);
+            }
+        }
+    }, [changeData])
 
     if (localStorage.getItem("jwt")) {
         return (
@@ -134,6 +235,8 @@ const Nav = () => {
                             <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
                                 <p className="text-2xl text-center font-bold text-slate-700">로그아웃 하시겠습니까?</p>
                                 <button className="p-1.5 px-1 w-[4.375rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded text-lg" onClick={logout}>로그아웃</button>
+                                <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
+                                <button className="p-1.5 px-1 text-slate-500 hover:text-blue-500 font-bold text-lg transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150" onClick={trigChange}>비밀번호 변경</button>
                                 {
                                     username !== "admin" &&
                                     <div className="border-dashed border-2 border-slate-300 p-[0px] w-full" />
@@ -142,6 +245,68 @@ const Nav = () => {
                                     username !== "admin" &&
                                     <button className="text-[1.125rem] text-center font-bold text-red-700 transition ease-in-out hover:-translate-y-0 hover:scale-125 duration-150" onClick={handleUnRegister}>회원탈퇴</button>
                                 }
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={passwordChange}
+                        onClose={closePasswordChange}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <p className="text-2xl text-center font-bold text-slate-700">비밀번호 변경</p>
+                                <input className="border-slate-300 rounded md:w-[15rem] font-bold text-slate-700" type="password" name="password" placeholder="비밀번호를 입력하세요." onChange={handleChange} />
+                                <input className="border-slate-300 rounded md:w-[15rem] font-bold text-slate-700" type="password" name="passwordConfirm" placeholder="비밀번호 확인을 입력하세요." onChange={handleChange} />
+                                <button className="p-1.5 px-1 w-[4.375rem] bg-yellow-500 hover:bg-yellow-700 font-bold text-white rounded text-lg" onClick={doChange}>변경</button>
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={change1}
+                        onClose={closeChange1}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <TEAnimation
+                                    animation="[browse-in_0.5s]"
+                                    start="onLoad"
+                                >
+                                    <p className="text-2xl text-center font-bold text-slate-700">비밀번호를 변경하였습니다.</p>
+                                </TEAnimation>
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={change2}
+                        onClose={closeChange2}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <TEAnimation
+                                    animation="[shake_0.5s]"
+                                    start="onLoad"
+                                >
+                                    <p className="text-2xl text-center font-bold text-slate-700">비밀번호가 일치하지 않습니다.</p>
+                                </TEAnimation>
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={changeError}
+                        onClose={() => setChangeError(false)}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <TEAnimation
+                                    animation="[shake_0.5s]"
+                                    start="onLoad"
+                                >
+                                    <p className="text-2xl text-center font-bold text-slate-700">비밀번호를 입력해 주세요.</p>
+                                </TEAnimation>
                             </div>
                         </Box>
                     </Modal>
@@ -175,6 +340,38 @@ const Nav = () => {
                                     start="onLoad"
                                 >
                                     <p className="text-2xl text-center font-bold text-slate-700">회원정보를 삭제하였습니다.</p>
+                                </TEAnimation>
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={tokenError}
+                        onClose={closeTokenError}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <TEAnimation
+                                    animation="[shake_0.5s]"
+                                    start="onLoad"
+                                >
+                                    <p className="text-2xl text-center font-bold text-slate-700">올바르지 않은 토큰 형식입니다.<br />다시 로그인해 주세요.</p>
+                                </TEAnimation>
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={memberError}
+                        onClose={closeMemberError}
+                        className="font-KOTRAHOPE"
+                    >
+                        <Box sx={style} className="rounded-lg w-auto">
+                            <div className="flex flex-col justify-center items-center gap-4 px-2.5 py-1">
+                                <TEAnimation
+                                    animation="[shake_0.5s]"
+                                    start="onLoad"
+                                >
+                                    <p className="text-2xl text-center font-bold text-slate-700">회원정보 오류.<br />다시 로그인해 주세요.</p>
                                 </TEAnimation>
                             </div>
                         </Box>
