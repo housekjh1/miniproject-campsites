@@ -437,6 +437,11 @@ const KakaoMapCamp = ({ area, camp }) => {
     const handleEdit = (seq) => {
         let tmp = comment.filter(item => item.seq === seq)[0];
         const handleEditButtonClick = () => {
+            if (!localStorage.getItem("jwt")) {
+                const currentUrl = window.location.href;
+                window.location.href = currentUrl;
+                return;
+            }
             handleEditButton(tmp);
         };
         setEditCommentTag(
@@ -529,6 +534,11 @@ const KakaoMapCamp = ({ area, camp }) => {
     }
 
     const handleRemoveButton = () => {
+        if (!localStorage.getItem("jwt")) {
+            const currentUrl = window.location.href;
+            window.location.href = currentUrl;
+            return;
+        }
         removeFunc();
         closeRemoveModal();
     }
@@ -589,6 +599,11 @@ const KakaoMapCamp = ({ area, camp }) => {
     }, [removeResult])
 
     const handleInput = () => {
+        if (!localStorage.getItem("jwt")) {
+            const currentUrl = window.location.href;
+            window.location.href = currentUrl;
+            return;
+        }
         if (inputValue.trim() === '') {
             setInputValue('');
             inputComment.current.focus();

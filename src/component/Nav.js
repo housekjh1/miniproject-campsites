@@ -59,6 +59,11 @@ const Nav = () => {
     }
 
     const doUnRegister = () => {
+        if (!localStorage.getItem("jwt")) {
+            const currentUrl = window.location.href;
+            window.location.href = currentUrl;
+            return;
+        }
         const formData = new URLSearchParams();
         formData.append('username', username);
         async function fetchQuit() {
@@ -87,6 +92,10 @@ const Nav = () => {
 
     useEffect(() => {
         if (localStorage.getItem("jwt")) {
+            if (localStorage.getItem("jwt").trim() === '') {
+                setTokenError(true);
+                return;
+            }
             const formData = new URLSearchParams();
             formData.append('token', localStorage.getItem("jwt"));
             async function fetchMember() {
@@ -158,6 +167,11 @@ const Nav = () => {
     }
 
     const doChange = () => {
+        if (!localStorage.getItem("jwt")) {
+            const currentUrl = window.location.href;
+            window.location.href = currentUrl;
+            return;
+        }
         if (user.password.trim() === '' || user.passwordConfirm.trim() === '') {
             user.password = '';
             user.passwordConfirm = '';
