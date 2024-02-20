@@ -8,9 +8,9 @@
 - Back-End : Spring
 - DB : MySQL
 
-### 프로젝트 예시
+### 시연동영상
 
-- [예시 동영상](https://youtu.be/BbT278g_SN0)
+- [miniproject-campsites](https://youtu.be/BbT278g_SN0)
 
 ### 프로젝트 진행관련 문서
 
